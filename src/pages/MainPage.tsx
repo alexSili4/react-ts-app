@@ -2,7 +2,7 @@ import Container from '@/components/Container';
 import Section from '@/components/Section';
 import { FC } from 'react';
 
-const NotFoundPage: FC = () => (
+const MainPage: FC = () => (
   <Section>
     <Container>
       <p>main page</p>
@@ -10,4 +10,4 @@ const NotFoundPage: FC = () => (
   </Section>
 );
 
-export default NotFoundPage;
+export default MainPage;
