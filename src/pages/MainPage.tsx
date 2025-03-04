@@ -1,12 +1,12 @@
-import Container from '@/components/Container';
-import Section from '@/components/Section';
+import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import Section from '@GeneralComponents/Section';
 import { FC } from 'react';
 
 const MainPage: FC = () => (
   <Section>
-    <Container>
+    <GeneralContainer>
       <p>main page</p>
-    </Container>
+    </GeneralContainer>
   </Section>
 );
 

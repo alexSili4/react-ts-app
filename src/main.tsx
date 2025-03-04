@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { theme } from '@/constants';
 import { ThemeProvider } from '@emotion/react';
-import GlobalStyles from '@/components/GlobalStyles';
+import GlobalStyles from '@GeneralComponents/GlobalStyles';
 import { BrowserRouter } from 'react-router-dom';
 import App from '@/components/App';
 
