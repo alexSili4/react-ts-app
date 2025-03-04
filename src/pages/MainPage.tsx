@@ -1,13 +1,8 @@
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
-import Section from '@GeneralComponents/Section';
+import Main from '@MainPageComponents/Main';
 import { FC } from 'react';
 
-const MainPage: FC = () => (
-  <Section>
-    <GeneralContainer>
-      <p>main page</p>
-    </GeneralContainer>
-  </Section>
-);
+const MainPage: FC = () => {
+  return <Main />;
+};
 
 export default MainPage;
