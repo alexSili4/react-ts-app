@@ -12,4 +12,21 @@ export default defineConfig({
       '@ErrorPageComponents/*': '/src/components/ErrorPage',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'dist/[name].js',
+        entryFileNames: 'dist/[name].js',
+        assetFileNames: (assetInfo) => {
+          const fileName = assetInfo.name || '';
+
+          if (fileName.endsWith('.png') || fileName.endsWith('.jpg')) {
+            return 'img/app/[name]-[hash][extname]';
+          }
+
+          return 'dist/[name][extname]';
+        },
+      },
+    },
+  },
 });
