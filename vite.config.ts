@@ -8,23 +8,39 @@ export default defineConfig({
     alias: {
       '@': '/src',
       '@GeneralComponents': '/src/components/General',
+      '@ErrorPageComponents': '/src/components/ErrorPage',
       '@MainPageComponents': '/src/components/MainPage',
-      '@ErrorPageComponents/*': '/src/components/ErrorPage',
+      // animations
+      '@AnimatedMainPageComponents': '/src/components/Animated/MainPage',
+      '@AnimatedGeneralComponents': '/src/components/Animated/General',
     },
   },
   build: {
+    emptyOutDir: true,
     rollupOptions: {
       output: {
-        chunkFileNames: 'dist/[name].js',
-        entryFileNames: 'dist/[name].js',
+        chunkFileNames: 'js/[name].js',
+        entryFileNames: 'js/[name].js',
         assetFileNames: (assetInfo) => {
           const fileName = assetInfo.name || '';
 
-          if (fileName.endsWith('.png') || fileName.endsWith('.jpg')) {
-            return 'img/app/[name]-[hash][extname]';
+          if (fileName.endsWith('.css')) {
+            return 'css/[name][extname]';
           }
 
-          return 'dist/[name][extname]';
+          if (fileName.endsWith('.ttf')) {
+            return 'fonts/[name][extname]';
+          }
+
+          if (fileName.endsWith('.mp4')) {
+            return 'video/[name][extname]';
+          }
+
+          if (fileName.endsWith('.jpg') || fileName.endsWith('.png')) {
+            return 'images/[name][extname]';
+          }
+
+          return 'assets/[name][extname]';
         },
       },
     },

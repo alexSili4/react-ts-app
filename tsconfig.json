@@ -3,9 +3,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@GeneralComponents/*": ["./src/components/General/*"],
       "@ErrorPageComponents/*": ["./src/components/ErrorPage/*"],
-      "@MainPageComponents/*": ["./src/components/MainPage/*"]
+      "@GeneralComponents/*": ["./src/components/General/*"],
+      "@MainPageComponents/*": ["./src/components/MainPage/*"],
+      // animations
+      "@AnimatedGeneralComponents/*": ["./src/components/Animated/General/*"],
+      "@AnimatedMainPageComponents/*": ["./src/components/Animated/MainPage/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
