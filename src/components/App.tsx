@@ -1,7 +1,7 @@
 import { FC, lazy } from 'react';
 import { PagePaths } from '@/constants';
 import { Route, Routes } from 'react-router-dom';
-import SharedLayout from '@GeneralComponents/SharedLayout';
+import SharedLayout from '@CommonComponents/SharedLayout';
 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));

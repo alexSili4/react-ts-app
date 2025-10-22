@@ -4,7 +4,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@ErrorPageComponents/*": ["./src/components/ErrorPage/*"],
-      "@GeneralComponents/*": ["./src/components/General/*"],
+      "@CommonComponents/*": ["./src/components/common/*"],
       "@MainPageComponents/*": ["./src/components/MainPage/*"],
       // animations
       "@AnimatedGeneralComponents/*": ["./src/components/Animated/General/*"],

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Section, Container, Title, Message } from './NotFound.styled';
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import GeneralContainer from '@CommonComponents/GeneralContainer';
 
 const NotFound: FC = () => (
   <Section>
