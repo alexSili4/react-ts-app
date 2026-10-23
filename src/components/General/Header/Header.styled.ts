@@ -1,0 +1,47 @@
+import styled from '@emotion/styled';
+import { Link, NavLink } from 'react-router';
+import { caption } from '@/styles/typography';
+
+export const StyledHeader = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: ${({ theme }) => theme.zIndex.header};
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+export const Inner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: ${({ theme }) => theme.headerHeight.mobile}px;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}px) {
+    height: ${({ theme }) => theme.headerHeight.tablet}px;
+  }
+`;
+
+export const LogoLink = styled(Link)`
+  display: flex;
+  color: ${({ theme }) => theme.colors.text};
+  transition: color ${({ theme }) => theme.transitionDurationAndFunc.all};
+
+  &:is(:hover, :focus-visible) {
+    color: ${({ theme }) => theme.colors.accent};
+  }
+`;
+
+export const NavList = styled.ul`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(6)}px;
+`;
+
+export const StyledNavLink = styled(NavLink)`
+  ${caption}
+  color: ${({ theme }) => theme.colors.textSecondary};
+  transition: color ${({ theme }) => theme.transitionDurationAndFunc.all};
+
+  &:is(:hover, :focus-visible),
+  &.active {
+    color: ${({ theme }) => theme.colors.text};
+  }
+`;

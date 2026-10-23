@@ -24,3 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Кеш інкрементальної збірки TypeScript
+*.tsbuildinfo
+
+# Тимчасовий файл, який Vite створює поруч із конфігом на час його завантаження
+vite.config.ts.timestamp-*
