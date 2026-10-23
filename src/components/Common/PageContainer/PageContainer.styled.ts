@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import containerPadding from '@/styles/containerPadding';
-import { IStyledContainerProps } from './GeneralContainer.types';
+import { IStyledContainerProps } from './PageContainer.types';
 
 export const Container = styled.div<IStyledContainerProps>`
   position: ${({ isPositionRelative, isPositionAbsolute }) =>

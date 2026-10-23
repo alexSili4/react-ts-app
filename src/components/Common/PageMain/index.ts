@@ -1,4 +1,4 @@
 // Компонент нічого не додавав понад один styled-тег: ні логіки, ні
 // семантики, ні дефолтів — лише зайвий вузол у дереві React і три
 // файли. Віддаємо стиль напряму.
-export { Main as default } from './GeneralMain.styled';
+export { Main as default } from './PageMain.styled';

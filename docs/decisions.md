@@ -246,6 +246,11 @@ description (з екрануванням `"` і `&`) і знімок з `h1`; `/
 один ряд із `@MainPageComponents`. Сумісність із newsun2 свідомо не враховували (рішення власника).
 
 **Що зроблено.** `src/components/General/` → `src/components/Common/`, `@GeneralComponents` →
-`@CommonComponents` у коді й документації. Імена компонентів (`GeneralContainer`, `GeneralMain`)
-не мінялись. Компоненти з `newsun2/starter/src/components/General/` класти в `Common/` і міняти
-імпорт `@GeneralComponents` → `@CommonComponents`.
+`@CommonComponents` у коді й документації. Слідом — і компоненти з «General» в імені:
+`GeneralContainer` → `PageContainer` (контейнер сітки сторінки), `GeneralMain` → `PageMain`
+(`<main>` сторінки). Не `Container` і `Main`: `Container` — звичне імʼя styled-компонента в
+`*.styled.ts` тих самих тек, а `Main` — секція головної (`MainPage/Main`).
+
+Компоненти з `newsun2/starter/src/components/General/` класти в `Common/`, імпорт
+`@GeneralComponents` → `@CommonComponents`, `GeneralContainer` → `PageContainer`,
+`GeneralMain` → `PageMain`.

@@ -73,7 +73,7 @@ src/
   пропси styled-компонентів — `interface IStyled<Name>Props`. Булеві пропси — `isX`, `showX`,
   обробники — `onXClick`.
 - Компонент, що не додає нічого, крім одного styled-тега, не заводити: віддати styled напряму
-  (`Common/Section`, `Common/GeneralMain`).
+  (`Common/Section`, `Common/PageMain`).
 - Спільне для кількох сторінок — у `Common/`. Компонент однієї сторінки — у `<Name>Page/`, з
   префіксом секції в імені (`HeroSectionTitle`), бо імена тек у різних сторінках збігаються.
 - Окремої теки для анімованих компонентів немає: компонент, що існує заради framer-motion, лежить
@@ -81,8 +81,9 @@ src/
   (`Common/AnimatedModalWin`). У старих проєктах (`newsun2`) такі лежать у `components/Animated/` —
   при перенесенні класти за новим правилом.
 - Компоненти зі старих проєктів (`newsun2`): там спільна тека зветься `General/` з аліасом
-  `@GeneralComponents`, тут — `Common/` і `@CommonComponents`. При перенесенні міняти імпорти.
-- Сторінка (`src/pages/<Name>Page.tsx`) лише збирає: `PageMeta` з `pagesMeta`, `GeneralMain`,
+  `@GeneralComponents`, тут — `Common/` і `@CommonComponents`; там `GeneralContainer` і
+  `GeneralMain`, тут — `PageContainer` і `PageMain`. При перенесенні міняти імпорти й імена.
+- Сторінка (`src/pages/<Name>Page.tsx`) лише збирає: `PageMeta` з `pagesMeta`, `PageMain`,
   секції, `Footer`. Логіки там немає.
 - Класовий компонент — лише для меж помилок (`ChunkErrorBoundary`).
 
@@ -104,7 +105,7 @@ src/
   імпортом `theme` з `@/constants` (функції-інтерполяції там theme не отримують).
 - Mobile-first: `@media (min-width: ${theme.breakpoints.tablet}px)`.
 - Типографіка — лише фрагменти з `src/styles/typography.ts` (`${h1}`), не ручні font-size.
-- Бічні поля — `GeneralContainer` або `styles/containerPadding.ts`; ширини в колонках —
+- Бічні поля — `PageContainer` або `styles/containerPadding.ts`; ширини в колонках —
   `styles/gridSpan.ts`; ширини у `vw`, що не мають рости за `maxWidth`, — `styles/cappedVw.ts`.
 - Візуально прихований текст — лише `styles/srOnly.ts` (1px + clip-path, не `scale(0)`).
 - Кастомні пропси на `styled(Component)` (`styled(Link)`, `styled(motion.div)`) доходять до

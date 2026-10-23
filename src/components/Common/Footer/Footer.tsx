@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { Links } from '@/constants';
 import { SITE_NAME } from '@/utils/pageTitle';
-import GeneralContainer from '@CommonComponents/GeneralContainer';
+import PageContainer from '@CommonComponents/PageContainer';
 import {
   Copyright,
   Inner,
@@ -24,7 +24,7 @@ const Footer: FC = () => {
 
   return (
     <StyledFooter>
-      <GeneralContainer>
+      <PageContainer>
         <Inner>
           <Copyright>
             {t('footer.copyright', {
@@ -47,7 +47,7 @@ const Footer: FC = () => {
             ))}
           </SocialList>
         </Inner>
-      </GeneralContainer>
+      </PageContainer>
     </StyledFooter>
   );
 };

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Section from '@CommonComponents/Section';
-import GeneralContainer from '@CommonComponents/GeneralContainer';
+import PageContainer from '@CommonComponents/PageContainer';
 import { useLoaderFinished } from '@/hooks';
 import { getSlideUpVariants } from '@/constants/motion';
 import { Content, Subtitle, Title } from './HeroSection.styled';
@@ -18,7 +18,7 @@ const HeroSection: FC = () => {
 
   return (
     <Section>
-      <GeneralContainer>
+      <PageContainer>
         <Content>
           <Title
             variants={titleVariants}
@@ -31,7 +31,7 @@ const HeroSection: FC = () => {
             {t('hero.subtitle')}
           </Subtitle>
         </Content>
-      </GeneralContainer>
+      </PageContainer>
     </Section>
   );
 };

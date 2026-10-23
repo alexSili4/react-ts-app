@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import GeneralContainer from '@CommonComponents/GeneralContainer';
+import PageContainer from '@CommonComponents/PageContainer';
 import { IProps } from './ErrorScreen.types';
 import {
   ActionButton,
@@ -20,7 +20,7 @@ const ErrorScreen: FC<IProps> = ({
   onActionClick,
 }) => {
   return (
-    <GeneralContainer isFullHeight>
+    <PageContainer isFullHeight>
       <Container>
         <Title>{title}</Title>
         <Message>{message}</Message>
@@ -32,7 +32,7 @@ const ErrorScreen: FC<IProps> = ({
           </ActionButton>
         )}
       </Container>
-    </GeneralContainer>
+    </PageContainer>
   );
 };
 

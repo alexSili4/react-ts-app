@@ -1,6 +1,6 @@
 import NotFound from '@ErrorPageComponents/NotFound';
 import { FC } from 'react';
-import GeneralMain from '@CommonComponents/GeneralMain';
+import PageMain from '@CommonComponents/PageMain';
 import { PagePaths } from '@/constants';
 import PageMeta from '@CommonComponents/PageMeta';
 import { pagesMeta } from '@/constants/pagesMeta';
@@ -14,9 +14,9 @@ const NotFoundPage: FC = () => {
   return (
     <>
       <PageMeta {...pagesMeta[PagePaths.notFound]} />
-      <GeneralMain>
+      <PageMain>
         <NotFound />
-      </GeneralMain>
+      </PageMain>
     </>
   );
 };

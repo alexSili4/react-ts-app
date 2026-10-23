@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { navLinks, PagePaths } from '@/constants';
-import GeneralContainer from '@CommonComponents/GeneralContainer';
+import PageContainer from '@CommonComponents/PageContainer';
 import Logo from '@/icons/logo.svg?react';
 import {
   Inner,
@@ -18,7 +18,7 @@ const Header: FC = () => {
 
   return (
     <StyledHeader>
-      <GeneralContainer>
+      <PageContainer>
         <Inner>
           <LogoLink to={PagePaths.root} aria-label={t('header.logo')}>
             <Logo />
@@ -35,7 +35,7 @@ const Header: FC = () => {
             </NavList>
           </nav>
         </Inner>
-      </GeneralContainer>
+      </PageContainer>
     </StyledHeader>
   );
 };

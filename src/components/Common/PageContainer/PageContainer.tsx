@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { IProps } from './GeneralContainer.types';
-import { Container } from './GeneralContainer.styled';
+import { IProps } from './PageContainer.types';
+import { Container } from './PageContainer.styled';
 
-const GeneralContainer: FC<IProps> = ({
+const PageContainer: FC<IProps> = ({
   children,
   isFullHeight = false,
   isPositionRelative = false,
@@ -25,4 +25,4 @@ const GeneralContainer: FC<IProps> = ({
   );
 };
 
-export default GeneralContainer;
+export default PageContainer;
