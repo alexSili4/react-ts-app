@@ -7,7 +7,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@CommonComponents/*": ["./src/components/Common/*"],
-      "@ErrorPageComponents/*": ["./src/components/ErrorPage/*"],
+      "@NotFoundPageComponents/*": ["./src/components/NotFoundPage/*"],
       "@MainPageComponents/*": ["./src/components/MainPage/*"]
     },
     "target": "ES2020",

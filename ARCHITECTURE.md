@@ -1,12 +1,12 @@
 # Архітектура
 
 Як влаштований фронтенд і куди що класти. Документ описує **повну** структуру проєкту, зокрема
-теки, яких у темплейті ще немає: темплейт містить лише каркас і по одному зразку кожного
-патерну, а решта створюється з першим файлом — за правилами нижче. Якщо задачі немає в цьому
-документі, спершу домовитись, потім дописати сюди правило.
+теки, яких у темплейті ще немає: темплейт містить лише каркас, а решта створюється з першим
+файлом — за правилами нижче. Якщо задачі немає в цьому документі, спершу домовитись, потім
+дописати сюди правило.
 
-Команди, деплой і старт нового проєкту — [README.md](README.md). Короткі правила для AI-агентів —
-[AGENTS.md](AGENTS.md). Чому рішення саме такі — [docs/decisions.md](docs/decisions.md).
+Команди й деплой — [README.md](README.md). Короткі правила для AI-агентів — [AGENTS.md](AGENTS.md).
+Чому рішення саме такі — [docs/decisions.md](docs/decisions.md).
 
 ---
 
@@ -14,30 +14,30 @@
 
 Встановлене в темплейті:
 
-| Призначення     | Пакет                                             | Версія |
-| --------------- | ------------------------------------------------- | ------ |
-| UI              | `react`, `react-dom`                              | 18.3   |
-| Роутинг         | `react-router` (декларативний режим)              | 7.18   |
-| Стилі           | `@emotion/react`, `@emotion/styled`, `@emotion/is-prop-valid` | 11 |
-| Анімації        | `framer-motion`                                   | 11     |
-| Плавний скрол   | `lenis`                                           | 1.3    |
-| Метатеги        | `react-helmet-async`                              | 3      |
-| Скидання стилів | `modern-normalize`                                | 2      |
+| Призначення     | Пакет                                                   | Версія |
+| --------------- | ------------------------------------------------------- | ------ |
+| UI              | `react`, `react-dom`                                    | 18.3   |
+| Роутинг         | `react-router` (декларативний режим)                    | 7.18   |
+| Стилі           | `@emotion/react`, `@emotion/styled`                     | 11     |
+| Плавний скрол   | `lenis`                                                 | 1.3    |
+| Метатеги        | `react-helmet-async`                                    | 3      |
+| Скидання стилів | `modern-normalize`                                      | 2      |
 | Збірка          | `vite`, `@vitejs/plugin-react`, `vite-plugin-svgr`, `vite-tsconfig-paths` | 6.4 |
-| Мова            | `typescript` (strict)                             | 5.4    |
-| Лінтер          | `eslint` 9 (flat config), `typescript-eslint` 8, `eslint-plugin-react`, `-react-hooks`, `-jsx-a11y`, `-react-refresh` | 9.39 |
+| Мова            | `typescript` (strict)                                   | 5.4    |
+| Лінтер          | `eslint` 9 (flat config), `typescript-eslint` 8, плагіни react, react-hooks, jsx-a11y, react-refresh | 9.39 |
 
 Додається **з першою потребою — саме ці пакети**, не альтернативи:
 
-| Задача                 | Пакет                                                                                         |
-| ---------------------- | --------------------------------------------------------------------------------------------- |
-| HTTP-запити            | `axios@^1`                                                                                    |
-| Форми                  | `react-hook-form@^7`                                                                          |
-| Локалізація            | `i18next@^25`, `react-i18next@^15`, `i18next-browser-languagedetector@^8`, `i18next-resources-to-backend@^1` |
-| Іконки з наборів       | `react-icons@^5`                                                                              |
-| Слайдери               | `swiper@^11`                                                                                  |
-| Lottie                 | `lottie-react@^2`                                                                             |
-| Біжучий рядок          | `react-fast-marquee@^1`                                                                       |
+| Задача            | Пакет                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| Анімації          | `framer-motion@^11` + `@emotion/is-prop-valid@^1` (див. 8)                               |
+| HTTP-запити       | `axios@^1`                                                                               |
+| Форми             | `react-hook-form@^7`                                                                     |
+| Локалізація       | `i18next@^25`, `react-i18next@^15`, `i18next-browser-languagedetector@^8`, `i18next-resources-to-backend@^1` |
+| Іконки з наборів  | `react-icons@^5`                                                                         |
+| Слайдери          | `swiper@^11`                                                                             |
+| Lottie            | `lottie-react@^2`                                                                        |
+| Біжучий рядок     | `react-fast-marquee@^1`                                                                  |
 
 Не використовуємо: Tailwind, CSS Modules, SCSS, styled-components та інший другий CSS-in-JS,
 UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand, MobX) — без окремого рішення.
@@ -56,7 +56,6 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
     ├── components/
     │   ├── App.tsx       # Lenis + маршрути
     │   ├── Common/       # спільне для кількох сторінок
-    │   ├── ErrorPage/    # 404 і екран помилки
     │   └── <Name>Page/   # компоненти однієї сторінки
     ├── pages/            # <Name>Page.tsx — збірка сторінки
     ├── constants/
@@ -72,22 +71,21 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
     └── i18n/
 ```
 
-| Тека                | У темплейті          | Що там                                                                 |
-| ------------------- | -------------------- | ---------------------------------------------------------------------- |
-| `components/Common` | є                    | layout, хедер, футер, контейнери, мета, модалки, межа помилок           |
-| `components/<Name>Page` | є (`MainPage`)   | секції й дрібніші компоненти однієї сторінки                            |
-| `components/ErrorPage` | є                 | `NotFound`, `ErrorScreen`                                               |
-| `pages`             | є                    | по файлу на сторінку                                                    |
-| `constants`         | є                    | `theme`, `pagePaths`, `pagesMeta`, `index`                              |
-| `styles`            | є                    | `typography`, `containerPadding`                                        |
-| `hooks`             | є                    | скрол і модалки                                                         |
-| `utils`             | є                    | метатеги сторінок, блокування скролу, межа помилок                      |
-| `types`             | є                    | типи подій і хуків                                                      |
-| `icons`             | є (`Common/logo.svg`) | SVG — по теках сторінок                                               |
-| `images`, `video`   | за потреби           | растр і відео — по теках сторінок                                      |
-| `fonts`             | за потреби           | шрифти — по теках родин                                                |
-| `services`          | за потреби           | HTTP-шар                                                                |
-| `i18n`              | за потреби           | переклади                                                               |
+| Тека                    | У темплейті                    | Що там                                                    |
+| ----------------------- | ------------------------------ | --------------------------------------------------------- |
+| `components/Common`     | є                              | layout, хедер, футер, контейнер, мета, модалка, лоадер, межа помилок |
+| `components/<Name>Page` | є (`MainPage`, `NotFoundPage`) | компоненти однієї сторінки                                 |
+| `pages`                 | є                              | по файлу на сторінку                                       |
+| `constants`             | є                              | `theme`, `pagePaths`, `pagesMeta`, `index`                 |
+| `styles`                | є                              | `typography`                                               |
+| `hooks`                 | є                              | `useScrollToTop`, `useModal`                               |
+| `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою       |
+| `types`                 | є                              | `hooks.types.ts`                                           |
+| `icons`                 | є (`Common/logo.svg`)          | SVG — по теках сторінок                                    |
+| `images`, `video`       | за потреби                     | растр і відео — по теках сторінок                          |
+| `fonts`                 | за потреби                     | шрифти — по теках родин                                    |
+| `services`              | за потреби                     | HTTP-шар                                                   |
+| `i18n`                  | за потреби                     | переклади                                                  |
 
 ### Вміст сторінки — у теці сторінки
 
@@ -101,7 +99,7 @@ src/
 │   ├── Common/          Header/, Footer/, …
 │   └── AboutPage/       HeroSection/, TeamSection/, …
 ├── images/
-│   ├── Common/          og-фон, фото для кількох сторінок
+│   ├── Common/          фото для кількох сторінок
 │   └── AboutPage/       hero-bg.webp, team/anna.webp, …
 ├── icons/
 │   ├── Common/          logo.svg, arrow.svg
@@ -110,8 +108,8 @@ src/
     └── AboutPage/       hero-loop.mp4
 ```
 
-- Імʼя теки — точно як у `components/`: `Common`, `MainPage`, `ErrorPage`, `<Name>Page`. Сторінка
-  без компонентів своєї теки (лише зі спільних) не потребує й тек ассетів.
+- Імʼя теки — точно як у `components/` і як файл сторінки в `pages/`: `Common`, `MainPage`,
+  `NotFoundPage`, `<Name>Page`.
 - Ассет, що знадобився на другій сторінці, переїжджає в `Common/` — так само, як компонент.
 - Усередині теки сторінки — підтеки секцій, коли файлів багато (`images/AboutPage/team/`).
 - Файли ассетів — kebab-case: `hero-bg.webp`, `arrow-right.svg`.
@@ -125,23 +123,22 @@ pages  →  components  →  hooks · styles · utils · constants · types
 ```
 
 - Сторінки імпортують компоненти, не навпаки.
-- `Common/` не імпортує компоненти сторінок (`<Name>Page/`). Компонент однієї сторінки може
-  імпортувати `Common/` і свої сусідні компоненти.
-- `utils/`, `constants/` (крім `theme`), `types/`, `services/` — без React і без JSX.
-- `utils/` і модулі даних у `constants/` — без звернень до `window`/`document` на рівні модуля:
-  їх виконує Node під час збірки (метатеги, пререндер, sitemap).
+- `Common/` не імпортує компоненти сторінок. Компонент сторінки може імпортувати `Common/` і
+  сусідні компоненти своєї сторінки.
+- `utils/`, `constants/` (крім `theme`), `types/`, `services/` — без JSX.
+- `constants/` і `utils/`, які імпортує `getPageMetaMap`, — без `window`/`document` на рівні
+  модуля: їх виконує Node під час збірки (метатеги, пререндер, sitemap).
 
 ### Аліаси
 
 Оголошені **лише** в `paths` у `tsconfig.json`; Vite читає їх звідти (`vite-tsconfig-paths`),
 скрипти — теж.
 
-| Аліас                      | Тека                           |
-| -------------------------- | ------------------------------ |
-| `@/*`                      | `src/*`                        |
-| `@CommonComponents/*`      | `src/components/Common/*`      |
-| `@ErrorPageComponents/*`   | `src/components/ErrorPage/*`   |
-| `@<Name>PageComponents/*`  | `src/components/<Name>Page/*` — рядок на кожну нову сторінку |
+| Аліас                        | Тека                                                       |
+| ---------------------------- | ---------------------------------------------------------- |
+| `@/*`                        | `src/*`                                                    |
+| `@CommonComponents/*`        | `src/components/Common/*`                                  |
+| `@<Name>PageComponents/*`    | `src/components/<Name>Page/*` — рядок на кожну сторінку з компонентами |
 
 Відносні імпорти — лише всередині теки компонента (`./Name.styled`).
 
@@ -155,7 +152,7 @@ pages  →  components  →  hooks · styles · utils · constants · types
 HeroSection/
 ├── HeroSection.tsx         # розмітка й логіка; export default
 ├── HeroSection.styled.ts   # styled-компоненти
-├── HeroSection.types.ts    # IProps (і IStyled<Name>Props) — лише якщо є пропси
+├── HeroSection.types.ts    # IProps — лише якщо є пропси
 └── index.ts                # export { default } from './HeroSection';
 ```
 
@@ -169,38 +166,36 @@ export default HeroSection;
 
 - Пропси — `interface IProps`; пропси styled-компонентів — `interface IStyled<Name>Props`.
 - Булеві пропси — `isX`, `showX`; обробники — `onXClick`, `onXChange`.
-- Компонент, що не додає нічого, крім одного styled-тега, не заводити: тека з `.styled.ts` і
-  `index.ts`, який віддає styled напряму (`Common/Section`, `Common/PageMain`).
+- Компонент, що є лише одним styled-тегом, — тека з `.styled.ts` і `index.ts`, який віддає
+  styled напряму (`Common/PageContainer`). Порожніх обгорток (`styled.section` без стилів) не
+  заводити — звичайний тег.
 - Класовий компонент — лише для меж помилок (`Common/ChunkErrorBoundary`).
 
 ### Куди класти
 
-| Компонент                                   | Тека                       | Імʼя                                   |
-| ------------------------------------------- | -------------------------- | -------------------------------------- |
-| використовується на 2+ сторінках            | `Common/`                  | за призначенням: `PillButton`, `Modal…` |
-| секція сторінки                             | `<Name>Page/`              | `<Секція>Section`: `HeroSection`        |
-| частина секції                              | `<Name>Page/`              | з префіксом секції: `HeroSectionTitle`  |
-| склад сторінки (порядок секцій)             | `<Name>Page/Main`          | `Main`                                  |
-| існує заради анімації framer-motion         | там само, що й інші        | з префіксом `Animated`: `AnimatedModalWin` |
+| Компонент                          | Тека              | Імʼя                                   |
+| ---------------------------------- | ----------------- | -------------------------------------- |
+| використовується на 2+ сторінках   | `Common/`         | за призначенням: `PillButton`, `Breadcrumbs` |
+| секція сторінки                    | `<Name>Page/`     | `<Секція>Section`: `HeroSection`        |
+| частина секції                     | `<Name>Page/`     | з префіксом секції: `HeroSectionTitle`  |
+| склад сторінки (порядок секцій)    | `<Name>Page/Main` | `Main`                                  |
+| існує заради анімації              | там само, що й інші | з префіксом `Animated`: `AnimatedTitle` |
 
-Компонент сторінки, який знадобився на другій сторінці, переїжджає в `Common/`. Окремої теки
-для анімованих компонентів немає. Імена тек у різних сторінках можуть збігатися (`HeroSection`
-у кількох `<Name>Page/`) — тому префікс секції в іменах дрібніших компонентів.
+Компонент сторінки, що знадобився на другій сторінці, переїжджає в `Common/`. Префікс секції в
+іменах дрібніших компонентів — бо імена тек у різних сторінках збігаються (`HeroSection`).
 
-### Що вже є в `Common/`
+### Що є в `Common/`
 
 | Компонент            | Призначення                                                                 |
 | -------------------- | --------------------------------------------------------------------------- |
-| `SharedLayout`       | хедер + `Suspense` з `Loader` + межа помилок над усіма маршрутами           |
+| `SharedLayout`       | каркас кожної сторінки: `Header`, `<main>` зі сторінкою (`Suspense` + `Loader`), `Footer`; межа помилок над усім |
 | `Header`, `Footer`   | заготовки — наповнити з макета                                              |
 | `PageContainer`      | контейнер сітки: `maxWidth` і бічні поля з теми                             |
-| `PageMain`           | `<main>` сторінки, тягнеться між хедером і футером                          |
-| `Section`            | `<section>`                                                                 |
 | `PageMeta`           | метатеги сторінки (Helmet)                                                  |
 | `GlobalStyles`       | скидання, базові стилі, `@font-face`, `prefers-reduced-motion`              |
-| `Loader`             | індикатор завантаження сторінки (фолбек `Suspense`)                         |
-| `ChunkErrorBoundary`, `PageReadySignal` | після деплою відкрита вкладка один раз тихо перезавантажується замість білого екрана |
-| `ModalWin`, `AnimatedModalWin` | портал у `#modal-root` і анімація появи/зникнення               |
+| `Loader`             | індикатор завантаження сторінки                                             |
+| `ChunkErrorBoundary` | після деплою відкрита вкладка один раз тихо перезавантажується замість білого екрана |
+| `ModalWin`           | модалка: портал у `#modal-root`, фон, діалог; поведінка — `useModal`        |
 
 ---
 
@@ -210,21 +205,20 @@ export default HeroSection;
    `PagePaths.dynamicParam`: маршрут `` `${PagePaths.projects}/:${PagePaths.dynamicParam}` ``.
 2. Метадані — у `constants/pagesMeta.ts`: `title` (разом із « | SITE_NAME» ≤ 60 символів),
    `description` (150–160), за потреби `image` (абсолютна адреса з `public/`) і `noIndex`.
-3. Файл `src/pages/<Name>Page.tsx` — лише збирає сторінку:
+3. Файл `src/pages/<Name>Page.tsx` — лише метатеги й склад сторінки; хедер, `<main>` і футер дає
+   `SharedLayout`:
 
    ```tsx
    const AboutPage: FC = () => (
      <>
        <PageMeta {...pagesMeta[PagePaths.about]} />
-       <PageMain>
-         <Main />
-       </PageMain>
-       <Footer />
+       <Main />
      </>
    );
    ```
 
-4. Маршрут — `lazy(() => import('@/pages/<Name>Page'))` і `<Route>` в `App.tsx`.
+4. Маршрут в `App.tsx`: `lazyPage(() => import('@/pages/<Name>Page'))` (не голий `lazy` — див. 7)
+   і `<Route>`.
 5. Тека `src/components/<Name>Page/` і аліас `@<Name>PageComponents/*` у `tsconfig.json`.
 6. Динамічна сторінка (`/projects/:id`) — ще й запис у `src/utils/getPageMetaMap.ts`, інакше вона
    не отримає метатегів у сирому HTML, знімка й місця в sitemap. Неіснуючий id —
@@ -232,10 +226,10 @@ export default HeroSection;
 
 Правила сторінки:
 
-- рівно один `<h1>`; якщо видимого немає — sr-only заголовок (`styles/srOnly.ts`, див. 6);
+- рівно один `<h1>`; якщо видимого немає — візуально прихований (1px + `clip-path`, не
+  `scale(0)`);
 - рендериться без дій користувача (пререндер не клікає);
-- власний `Suspense` усередині сторінки не ставити: `PageReadySignal` у `SharedLayout` має
-  спрацювати, коли сторінка відрендерилась повністю;
+- власний `Suspense` усередині сторінки не ставити — `Loader` у `SharedLayout` уже є;
 - роутинг — React Router 7, імпорти з `react-router`; `<BrowserRouter useTransitions={false}>` у
   `main.tsx` свідомо: під час переходу видно `Loader`.
 
@@ -247,11 +241,11 @@ export default HeroSection;
 | ------------------------- | ----- | --------------------------------------------------------------------- |
 | `theme.ts`                | так   | дизайн-токени: кольори, шрифти, брейкпоінти, сітка, радіуси, z-index, тривалості |
 | `pagePaths.ts`            | так   | `const enum PagePaths` — усі шляхи                                    |
-| `pagesMeta.ts`            | так   | метадані сторінок                                                     |
+| `pagesMeta.ts`            | так   | `SITE_NAME`, `SITE_URL` і метадані сторінок                           |
 | `index.ts`                | так   | барель легких констант                                                |
 | `navLinks.ts`             | ні    | пункти навігації хедера/футера                                        |
 | `links.ts`                | ні    | `const enum Links` — зовнішні посилання (соцмережі, документи)        |
-| `contacts.ts`             | ні    | телефони, пошта, адреса — одне джерело для хедера, футера, JSON-LD    |
+| `contacts.ts`             | ні    | телефони, пошта, адреса — одне джерело для хедера й футера            |
 | `motion.ts`, `viewport.ts`| ні    | спільні варіанти framer-motion і межі `whileInView` (див. 8)          |
 | `formErrorMessages.ts`, `regExp.ts` | ні | тексти помилок і регулярні вирази форм                         |
 | `<domain>.ts`, `<domain>/` | ні   | дані: `projects/<id>.ts` + `projects/index.ts`                        |
@@ -273,22 +267,14 @@ export default HeroSection;
   імпортом `theme` з `@/constants` (функції-інтерполяції там theme не отримують).
 - Mobile-first: `@media (min-width: ${theme.breakpoints.tablet}px)`.
 - Відступи — `theme.spacing(n)` (крок 4 px).
+- Ховер і фокус — `&:is(:hover, :focus-visible)`, не `:focus`.
 - Вендорні префікси не писати — їх додає emotion.
 - Кастомні пропси на `styled(Component)` (`styled(Link)`) доходять до DOM — фільтрувати через
-  `shouldForwardProp`. Для `styled.div` і `styled(motion.*)` цього не треба (`isPropValid` у
-  `main.tsx`).
+  `shouldForwardProp`.
 
-Фрагменти в `styles/`:
-
-| Файл                  | Є    | Що                                                                 |
-| --------------------- | ---- | ------------------------------------------------------------------ |
-| `typography.ts`       | так  | типографічна шкала з макета (`h1`, `bodyRegular16`, …): `${h1}`    |
-| `containerPadding.ts` | так  | бічні поля контейнера за сіткою                                    |
-| `srOnly.ts`           | ні   | візуально прихований текст: 1px + `clip-path` (не `scale(0)`)      |
-| `gridSpan.ts`         | ні   | ширина в колонках сітки як `calc()`                                |
-| `cappedVw.ts`         | ні   | ширина у `vw`, що не росте за `grid.maxWidth`                      |
-
-Розміри шрифтів — лише з `typography.ts`, не ручні `font-size` у компонентах.
+`styles/` — спільні css-фрагменти. Є `typography.ts` — шкала з макета (`h1`, `bodyRegular16`,
+…), підключається `${h1}`; ручних `font-size` у компонентах немає. Інші фрагменти (sr-only,
+ширина в колонках сітки) — сюди ж, коли знадобляться в двох місцях.
 
 ---
 
@@ -296,18 +282,25 @@ export default HeroSection;
 
 **Хуки** — `src/hooks/use<Name>.ts`, по хуку на файл, `export default`, експорт із барелю
 `hooks/index.ts`. Типи параметрів і результату — `types/hooks.types.ts`
-(`IUse<Name>Props`, `IUse<Name>`).
+(`IUse<Name>Props`, `IUse<Name>`). Є:
 
-**Утиліти** — `src/utils/<name>.ts`, по функції на файл, `export default`, чисті функції без
-React. Імена — дієсловом: `get…`, `is…`, `format…`. Барель `utils/index.ts` — коли утиліт стає
-кілька й вони потрібні в багатьох місцях.
+- `useScrollToTop` — прокрутка вгору при зміні сторінки (з урахуванням Lenis);
+- `useModal` — усе для модалки: Escape, клік по фону, блокування скролу (і Lenis), фокус
+  усередині діалогу й повернення фокусу після закриття.
+
+**Утиліти** — `src/utils/<name>.ts`: функція або тісно повʼязана група функцій на файл, без
+React-компонентів. Імена — дієсловом: `get…`, `is…`, `format…`. Є:
+
+- `getPageMetaTags`, `getPageMetaMap` — метатеги й перелік сторінок (див. 10);
+- `chunkReload` — `lazyPage` і прапорець для `ChunkErrorBoundary`: після деплою вкладка, відкрита
+  раніше, один раз тихо перезавантажується замість білого екрана.
 
 У хуках і утилітах з барелів виклик на рівні модуля (`createContext`, `new Map`) — з
 `/* @__PURE__ */`, інакше модуль осідає у вхідному чанку.
 
-**Типи** — `src/types/<domain>.types.ts`: доменні типи (`projects.types.ts`), спільні аліаси подій
-(`general.types.ts`: `DivClickEvent`, …) і функцій (`functions.types.ts`). Типи пропсів — поруч із
-компонентом (`Name.types.ts`). Інтерфейси — з префіксом `I`, обʼєднання й аліаси — `type`.
+**Типи** — `src/types/<domain>.types.ts`: доменні типи (`projects.types.ts`), типи хуків
+(`hooks.types.ts`). Типи пропсів — поруч із компонентом (`Name.types.ts`). Інтерфейси — з
+префіксом `I`, обʼєднання й аліаси — `type`.
 
 **Стан.** Стан сторінки — у компонентах і хуках. Спільний для кількох гілок дерева — React
 Context: провайдер у `Common/<Name>Provider`, хук доступу `use<Name>` у `hooks/`.
@@ -316,23 +309,25 @@ Context: провайдер у `Common/<Name>Provider`, хук доступу `u
 
 ## 8. Анімації, скрол, модалки
 
-**framer-motion.** `Variants` і `Transition` — на рівні модуля, не в тілі компонента (інакше
-перестворюються щорендер); спільні — у `constants/motion.ts`. Інлайнових
-`animate={{...}}` / `transition={{...}}` не писати. Межі `useInView` / `whileInView` — у відсотках і
-лише по вертикалі (`constants/viewport.ts`): піксельні `margin` ламаються на вузьких екранах.
-Пружина з рядковими відсотками (`y: '100%'`) і затримкою дає `NaN%` — анімувати числом.
+**CSS.** Переходи й `@keyframes` — з тривалостями й easing із `theme.transitionDurationAndFunc`.
+`prefers-reduced-motion` обробляється глобально в `GlobalStyles` — не дублювати.
 
-**Рух.** `prefers-reduced-motion` обробляється глобально (`GlobalStyles` +
-`reducedMotion='user'` у `main.tsx`) — не вимикати й не дублювати.
+**framer-motion** (коли знадобиться складна анімація). Разом із ним — `<MotionConfig
+isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidProp` кастомні пропси
+`styled(motion.*)` доходять до DOM, без `reducedMotion` анімації ігнорують системне «зменшити
+рух». `Variants` і `Transition` — на рівні модуля, не в тілі компонента (інакше
+перестворюються щорендер); спільні — у `constants/motion.ts`. Інлайнових
+`animate={{...}}` / `transition={{...}}` не писати. Межі `useInView` / `whileInView` — у
+відсотках і лише по вертикалі (`constants/viewport.ts`): піксельні `margin` ламаються на вузьких
+екранах.
 
 **Скрол.** Керує Lenis (`App.tsx`). Блок із власною прокруткою — атрибут `data-lenis-prevent`.
-Блокувати прокрутку — лише `useBodyScrollLock` (лічильник + зупинка Lenis), не
+Блокувати прокрутку сторінки — лише через `useModal` (лічильник + зупинка Lenis), не
 `document.body.style` напряму.
 
-**Модалки.** `ModalWin` (портал у `#modal-root`) + `AnimatedModalWin` (поява/зникнення) +
-`useModalClose` / `useModalWin` (Escape, клік по фону, блокування скролу, фокус-трап). На
-контейнері діалогу: `ref={dialogRef}`, `role='dialog'`, `aria-modal='true'`, `aria-label`,
-`tabIndex={-1}`.
+**Модалки.** `<ModalWin isOpen onClose ariaLabel>{вміст}</ModalWin>` — портал, фон, діалог з
+`role='dialog'`, `aria-modal`, фокусом і закриттям. Модалка з власною розміткою (меню на весь
+екран) — свій компонент на `useModal` з тими самими атрибутами діалогу.
 
 ---
 
@@ -363,8 +358,8 @@ Context: провайдер у `Common/<Name>Provider`, хук доступу `u
   `scripts/gen-pages.mjs` (сирий HTML). Новий тег у `PageMeta` — той самий тег у `renderMetaTags`
   у `gen-pages.mjs`.
 - Збірка: `vite build` → `gen-pages` (`dist/<шлях>.html` з метатегами сторінки + `404.html`) →
-  `prerender` (headless Chrome кладе текст `#root` в обгортку `[data-prerender]`, яку inline-стиль
-  `index.html` ховає від людей) → `sitemap`.
+  `prerender` (headless Chrome кладе текст сторінки в обгортку `[data-prerender]`, яку
+  inline-стиль `index.html` ховає від людей) → `sitemap`.
 - Знімок — лише для роботів, `createRoot` його замінює. Не перетворювати на гідрацію
   (`hydrateRoot`) без окремого рішення: код не готовий до SSR.
 
@@ -372,18 +367,19 @@ Context: провайдер у `Common/<Name>Provider`, хук доступу `u
 
 ## 11. Модулі за потреби
 
-Перевірені реалізації — у `D:\work\sunAgency\newsun2\starter` (там спільна тека зветься
-`General/`, аліас `@GeneralComponents`, а `PageContainer`/`PageMain` — `GeneralContainer`/
-`GeneralMain`: при перенесенні класти в `Common/` і міняти імпорти). Уже адаптовані під цей
-темплейт версії частини файлів — в історії репозиторію: `git show 52b324d:<шлях>`.
+Перевірені реалізації — у `D:\work\sunAgency\newsun2\starter`. Там спільна тека зветься
+`General/` (аліас `@GeneralComponents`), `PageContainer` — `GeneralContainer`, ассети лежать
+інакше (`images/main/`, постери — одна тека `images/posters/`): при перенесенні класти за
+правилами цього документа й міняти імпорти. Частина файлів, уже адаптованих під темплейт, — в
+історії репозиторію: `git show 52b324d:<шлях>`.
 
 ### Дані з API
 
 `axios` → `src/services/http.service.ts` (базовий клас: адреса, версія API, токен) +
-`src/services/app.service.ts` (`class AppService extends HttpService` з методами бекенду).
-Адреса — `VITE_API_URL` у `.env` (+ `.env.example` і тип у `vite-env.d.ts`); у `VITE_*` — жодних
+`src/services/app.service.ts` (`class AppService extends HttpService` з методами API). Адреса —
+`VITE_API_URL` у `.env` (+ `.env.example` і тип у `vite-env.d.ts`); у `VITE_*` — жодних
 секретів. Типи запитів і відповідей — `types/<домен>.types.ts`; помилки валідації (422)
-перетворювати на помилки полів у сервісі. Адаптовані файли: `git show 52b324d:src/services/http.service.ts`.
+перетворювати на помилки полів у сервісі. Адаптований файл: `git show 52b324d:src/services/http.service.ts`.
 
 ### Форми
 
@@ -416,7 +412,7 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 
 | Модуль              | Пакет                  | Файли                                                                    |
 | ------------------- | ---------------------- | ------------------------------------------------------------------------ |
-| Відео з автоплеєм   | —                      | `General/AutoplayVideo`, `hooks/useVideo.ts`; у newsun2 постери лежать в одній теці `src/images/posters/` — при перенесенні змінити `import.meta.glob` в `AutoplayVideo` на `images/*/posters/*.webp` |
+| Відео з автоплеєм   | —                      | `General/AutoplayVideo`, `hooks/useVideo.ts`; `import.meta.glob` постерів у `AutoplayVideo` змінити на `images/*/posters/*.webp` |
 | Слайдер             | `swiper`               | `src/styles/swiper.css` (`@layer swiper`), `General/SwiperNavButtons`, `hooks/useSwiperEdges.ts` |
 | Lottie              | `lottie-react`         | `General/InViewLottie`, `hooks/useLazyLottie.ts`, `hooks/useLottieData.ts`; аліас `lottie-web` → `lottie-web/build/player/lottie_svg` у `vite.config.ts` |
 | Біжучий рядок       | `react-fast-marquee`   | `MainPage/ClientsSectionMarquee`                                         |
@@ -434,17 +430,17 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 | Що                              | Як                                   | Приклад                        |
 | ------------------------------- | ------------------------------------ | ------------------------------ |
 | Тека й файл компонента          | PascalCase                           | `HeroSection/HeroSection.tsx`  |
-| Тека групи компонентів          | PascalCase                           | `Common/`, `MainPage/`         |
+| Тека групи компонентів          | PascalCase, як файл сторінки         | `Common/`, `MainPage/`         |
 | Тека ассетів сторінки           | як група компонентів                 | `images/MainPage/`, `icons/Common/` |
 | Файл ассета                     | kebab-case                           | `hero-bg.webp`, `arrow-right.svg` |
 | Сторінка                        | `<Name>Page.tsx`                     | `ContactsPage.tsx`             |
-| Хук                             | `use<Name>.ts`                       | `useModalWin.ts`               |
+| Хук                             | `use<Name>.ts`                       | `useModal.ts`                  |
 | Утиліта                         | camelCase, дієслово                  | `getPageMetaTags.ts`           |
 | Константи                       | camelCase-файл                       | `pagesMeta.ts`                 |
 | Набір рядків                    | `const enum`, PascalCase             | `PagePaths.root`               |
 | Типи                            | `<domain>.types.ts`, `I<Name>`       | `IProps`, `IPageMetaData`      |
 | styled-компонент                | за роллю                             | `Title`, `Content`, `StyledHeader` (коли збігається з HTML-тегом) |
-| Булевий проп / стан             | `is…`, `show…`, `has…`               | `isOpen`, `showModalWin`       |
+| Булевий проп / стан             | `is…`, `show…`, `has…`               | `isOpen`, `showMenu`           |
 | Обробник                        | `on<Що><Подія>`                      | `onCloseBtnClick`              |
 
 Код, коментарі й тексти — українською. Коментар пояснює **чому**, а не що робить код.

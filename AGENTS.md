@@ -10,7 +10,7 @@
 ## Проєкт
 
 SPA на Vite 6.4 + React 18.3 + TypeScript (strict), React Router 7 (декларативний режим),
-emotion, framer-motion, Lenis, react-helmet-async. Збірка — `dist/` з окремим HTML і знімком
+emotion, Lenis, react-helmet-async. Збірка — `dist/` з окремим HTML і знімком
 контенту на кожну сторінку.
 
 **Мова:** код, коментарі, тексти комітів і звіти — українською. Відповідати користувачу
@@ -55,10 +55,10 @@ npm run build       # typecheck → vite build → pages → prerender → sitem
   немає.
 - Аліаси — лише в `paths` у `tsconfig.json`; `resolve.alias` у `vite.config.ts` для шляхів проєкту
   не заводити.
-- Варіанти framer-motion — на рівні модуля, не в тілі компонента; інлайнових
-  `animate={{...}}` / `transition={{...}}` немає.
-- Блокування скролу — лише `useBodyScrollLock`; блок із власною прокруткою —
-  `data-lenis-prevent`.
+- Модалка — `ModalWin` або власний компонент на `useModal`; блокування скролу сторінки — лише
+  через `useModal`. Блок із власною прокруткою — `data-lenis-prevent`.
+- Сторінка — лише `PageMeta` і склад секцій: хедер, `<main>` і футер дає `SharedLayout`. Маршрут —
+  через `lazyPage`, не голий `lazy`.
 - Кожна сторінка: `PageMeta` з `pagesMeta`, рівно один `h1`, рендер без дій користувача. Динамічна
   сторінка — запис у `src/utils/getPageMetaMap.ts`.
 - Значення метатегів — лише через `getPageMetaTags`; новий тег у `PageMeta` — той самий тег у
@@ -76,5 +76,6 @@ npm run build       # typecheck → vite build → pages → prerender → sitem
 
 - TypeScript strict, без `any` і `// @ts-ignore`. `eslint-disable` — лише точково, з поясненням.
 - Коментарі пояснюють **чому**, а не що робить код. Без коментарів-наративів («додав…», «тепер…»).
-- Перенесення з `newsun2`: там тека `General/` (`@GeneralComponents`), `GeneralContainer`,
-  `GeneralMain`; тут — `Common/` (`@CommonComponents`), `PageContainer`, `PageMain`.
+- Перенесення з `newsun2`: там тека `General/` (`@GeneralComponents`) і `GeneralContainer`, тут —
+  `Common/` (`@CommonComponents`) і `PageContainer`; ассети там лежать не по теках сторінок —
+  класти за правилами ARCHITECTURE.md.

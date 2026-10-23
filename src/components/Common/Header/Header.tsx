@@ -5,7 +5,7 @@ import Logo from '@/icons/Common/logo.svg?react';
 import { Inner, LogoLink, StyledHeader } from './Header.styled';
 
 // Заготовка: лише лого. Навігація — список із constants/navLinks.ts,
-// мобільне меню — модалкою (ModalWin + useModalClose), коли їх намалює
+// мобільне меню — модалкою (ModalWin), коли їх намалює
 // дизайнер (ARCHITECTURE.md).
 const Header: FC = () => {
   return (

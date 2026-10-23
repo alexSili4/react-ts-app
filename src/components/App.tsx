@@ -1,14 +1,15 @@
-import { FC, lazy, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { PagePaths } from '@/constants';
 import { Route, Routes } from 'react-router';
 import SharedLayout from '@CommonComponents/SharedLayout';
 import { LenisRef, ReactLenis } from 'lenis/react';
 import { useScrollToTop } from '@/hooks';
+import { lazyPage } from '@/utils/chunkReload';
 
 // Кожна сторінка — окремий лінивий чанк. Нова сторінка: файл у src/pages,
 // шлях у PagePaths, метадані в pagesMeta і маршрут нижче.
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
-const MainPage = lazy(() => import('@/pages/MainPage'));
+const NotFoundPage = lazyPage(() => import('@/pages/NotFoundPage'));
+const MainPage = lazyPage(() => import('@/pages/MainPage'));
 
 const App: FC = () => {
   useScrollToTop();

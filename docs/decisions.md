@@ -68,10 +68,8 @@
 
 **Архітектура**
 
-- **Самостійний SPA замість вбудованого в Laravel.** Проєкти агенції живуть по-різному: у Laravel
-  (`newsun2`), у Yii (`atbmarket`, `zh2`), окремо на Vercel (`SUN`). Тому за замовчуванням —
-  `index.html` з метатегами, збірка в `dist/`, `base: '/'`. Вбудовування в бекенд —
-  [backend-integration.md](backend-integration.md).
+- **Самостійний SPA.** `index.html` з метатегами, збірка в `dist/`, статичний хостинг. Бекенду в
+  проєктах темплейту немає (3.11), тож вбудовування в Laravel, як у newsun2, не описується.
 - З `vite.config.ts` прибрано Laravel-специфічне: `reactAppViewHtml`, `pageMetaJson`,
   `pruneStaleBuildFiles` + `BUILD_ID`, імена без хеша (`js/index.js`, `css/index.css`),
   `PRELOADED_FONTS`, розкладку ассетів по теках. Лишилось загальне: SVGR з `aria-hidden`,
@@ -83,16 +81,16 @@
 
 **Тека `src` — що перенесено**
 
-- `Common/` (у newsun2 — `General/`, 3.8): `SharedLayout`, `GlobalStyles`, `PageContainer`,
-  `PageMain`, `Section`, `PageMeta`, `Loader`, `ChunkErrorBoundary` + `PageReadySignal`,
-  `ModalWin` + `AnimatedModalWin`; заготовки `Header` (лого) і `Footer` (копірайт).
-- Хуки модалок і скролу: `useModalWin`, `useModalClose`, `useBodyScrollLock`, `useFocusTrap`,
-  `useScrollToTop`; утиліти до них.
-- `ErrorPage/`: `NotFound` і `ErrorScreen` (простий екран з тим самим API, що `BlackHoleScreen`).
+Склад після 3.11:
+
+- `Common/` (у newsun2 — `General/`, 3.8): `SharedLayout` (хедер, `<main>`, футер), заготовки
+  `Header` і `Footer`, `PageContainer`, `PageMeta`, `GlobalStyles`, `Loader`, `ChunkErrorBoundary`,
+  `ModalWin`.
+- `MainPage/`: `Main` + зразок секції `HeroSection`; `NotFoundPage/`: `NotFound`.
+- `hooks/`: `useScrollToTop`, `useModal`. `utils/`: `getPageMetaTags`, `getPageMetaMap`,
+  `chunkReload`. `types/`: `hooks.types`. `styles/`: `typography`.
 - `constants/`: `theme` (нейтральна заготовка, брейкпоінти 768 / 1024 / 1440 замість
   дизайнерських SUN), `pagePaths`, `pagesMeta`, `index`.
-- `styles/`: `typography`, `containerPadding`.
-- Зразок секції: `MainPage/HeroSection` (усі чотири файли компонента).
 
 **Що лише описано в ARCHITECTURE.md** (з посиланнями на файли newsun2 і на адаптовані версії в
 історії темплейту, `git show 52b324d:<шлях>`): i18n, HTTP-шар, форми, шрифти, картинки, відео,
@@ -104,9 +102,9 @@
 - `react`, `react-dom` — `^18.3.1` (див. розділ 1), `@types/react` — `^18.3.3`.
 - Погоджено й виконано 23.10.2026 (розділ 3): `vite` 5 → 6.4 (3.1), `react-router-dom` 6 →
   `react-router` 7.18 (3.2), ESLint 8 → 9 з flat config (3.3), `vite-tsconfig-paths` (3.4).
-- У `package.json` — лише те, що використовує каркас (3.9). `axios`, `react-hook-form`, i18next,
-  `react-icons`, `swiper`, `lottie-react`, `react-fast-marquee` — з першою потребою, перелік і
-  версії — ARCHITECTURE.md, розділ 1.
+- У `package.json` — лише те, що використовує каркас (3.9, 3.11). `framer-motion`, `axios`,
+  `react-hook-form`, i18next, `react-icons`, `swiper`, `lottie-react`, `react-fast-marquee` — з
+  першою потребою, перелік і версії — ARCHITECTURE.md, розділ 1.
 
 **Конфіги**
 
@@ -297,3 +295,28 @@ newsun2 теки ассетів названі інакше (`images/main/`, `ic
 **Що зроблено.** Правило — в ARCHITECTURE.md (розділ 2, «Вміст сторінки — у теці сторінки», і
 розділ 9) та AGENTS.md; `src/icons/logo.svg` → `src/icons/Common/logo.svg`. Постери відео — у
 `images/<Сторінка>/posters/`. Шрифти — виняток: тека за родиною.
+
+### 3.11. Лише базове в кожній теці — ✅ рішення власника 23.10.2026
+
+**Чому.** Після 3.9 у темплейті все ще лишалось зайве: документ про бекенд, якого в проєктах
+немає; порожні обгортки (`Section` — `styled.section` без стилів, `PageMain`); `AnimatedModalWin`
+заради анімації, яку ніхто не просив; чотири хуки на одну модалку.
+
+**Що зроблено.**
+
+- `docs/backend-integration.md` і всі згадки бекенду — прибрано.
+- Модалка: `useModalWin` + `useModalClose` + `useBodyScrollLock` + `useFocusTrap` (+ утиліта
+  блокування скролу й типи подій) → один хук `useModal`. `ModalWin` тепер сам дає портал, фон і
+  діалог з усіма атрибутами: `<ModalWin isOpen onClose ariaLabel>`. `AnimatedModalWin` прибрано,
+  а з ним і `framer-motion` (+ `@emotion/is-prop-valid`, `MotionConfig`) — повертаються з першою
+  анімацією (ARCHITECTURE.md, розділ 8).
+- `SharedLayout` рендерить хедер, `<main>` і футер — сторінка лише `PageMeta` + склад секцій;
+  `PageMain` і `Section` прибрано.
+- `PageContainer` — один styled-компонент без пропсів-перемикачів; `containerPadding` злито в нього.
+- 404: `ErrorPage/{NotFound, ErrorScreen}` → `NotFoundPage/NotFound` — тека названа як сторінка
+  (правило 3.10); `ChunkErrorBoundary` має власну просту заглушку.
+- `PageReadySignal` → `lazyPage` в `utils/chunkReload.ts`: прапорець автоперезавантаження
+  знімається, коли чанк сторінки приїхав.
+- `SITE_NAME`, `SITE_URL` — у `constants/pagesMeta.ts`; `utils/pageTitle.ts` прибрано.
+- Пререндер чекає `#root main h1`: `<main>` тепер є ще до завантаження сторінки.
+

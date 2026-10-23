@@ -36,10 +36,6 @@ const getVendorChunk = (id: string): string | undefined => {
     return 'react';
   }
 
-  if (['framer-motion', 'motion-dom', 'motion-utils'].includes(pkg)) {
-    return 'framer-motion';
-  }
-
   return undefined;
 };
 
@@ -54,10 +50,6 @@ export default defineConfig({
     // «зображенням». Змістовній іконці — role='img' і aria-label точково.
     svgr({ svgrOptions: { svgProps: { 'aria-hidden': 'true' } } }),
   ],
-  // Сайт у підтеці (бекенд віддає збірку з /frontend/) — base: '/frontend/',
-  // а адреси файлів із public/ будувати через getPublicUrl. Докладніше —
-  // docs/backend-integration.md.
-  base: '/',
   build: {
     // Шрифти й картинки завжди окремими файлами з хешем, а не base64 у
     // бандлі: так вони кешуються незалежно від коду.

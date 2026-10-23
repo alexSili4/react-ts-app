@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import Section from '@CommonComponents/Section';
 import PageContainer from '@CommonComponents/PageContainer';
 import { IProps } from './HeroSection.types';
 import { Content, Subtitle, Title } from './HeroSection.styled';
@@ -9,14 +8,14 @@ import { Content, Subtitle, Title } from './HeroSection.styled';
 // першою секцією з макета.
 const HeroSection: FC<IProps> = ({ title, subtitle }) => {
   return (
-    <Section>
+    <section>
       <PageContainer>
         <Content>
           <Title>{title}</Title>
           <Subtitle>{subtitle}</Subtitle>
         </Content>
       </PageContainer>
-    </Section>
+    </section>
   );
 };
 

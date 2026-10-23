@@ -1,15 +1,13 @@
-import { RefObject } from 'react';
-import { ElementOrNull } from './general.types';
-import { Func, OnDivClickFunc } from './functions.types';
+import { MouseEvent, RefObject } from 'react';
 
-export interface IUseModalWinProps {
-  setModalWinState: Func;
-  showModalWin: boolean;
+export interface IUseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export interface IUseModalWin {
-  modalRoot: ElementOrNull;
-  hideModalWin: OnDivClickFunc;
+export interface IUseModal {
   // Вішається на контейнер діалогу: фокус-трап і повернення фокусу.
   dialogRef: RefObject<HTMLDivElement>;
+  // Закриває модалку кліком по фону, але не по самому діалогу.
+  onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
 }

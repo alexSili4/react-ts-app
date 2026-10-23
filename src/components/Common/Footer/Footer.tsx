@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SITE_NAME } from '@/utils/pageTitle';
+import { SITE_NAME } from '@/constants/pagesMeta';
 import PageContainer from '@CommonComponents/PageContainer';
 import { Copyright, StyledFooter } from './Footer.styled';
 

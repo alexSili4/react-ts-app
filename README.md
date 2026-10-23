@@ -1,14 +1,13 @@
 # React App — темплейт фронтенду
 
 Стартовий шаблон для нових проєктів агенції: SPA на **Vite 6 + React 18.3 + TypeScript**, стилі на
-**emotion**. У темплейті — лише каркас, що запускається, і по одному зразку кожного патерну.
-Решта структури описана в архітектурі й створюється з першою потребою.
+**emotion**. У темплейті — лише базовий каркас, що запускається. Решта структури описана в
+архітектурі й створюється з першою потребою.
 
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — структура, куди що класти, як оформлювати код, стек і
   модулі, які додаються за потреби. Читати першим.
 - [AGENTS.md](AGENTS.md) — правила для AI-агентів (Claude Code читає його через `CLAUDE.md`).
 - [docs/decisions.md](docs/decisions.md) — чому рішення саме такі.
-- [docs/backend-integration.md](docs/backend-integration.md) — як вбудувати в Laravel/Yii.
 
 Node — **22** (`.nvmrc`), мінімум 20. Для збірки потрібен Google Chrome (пререндер).
 
@@ -35,7 +34,7 @@ npm run dev
 ## Чекліст нового проєкту
 
 1. `package.json` → `name`.
-2. `src/utils/pageTitle.ts` → `SITE_NAME`, `SITE_URL` (з них title, canonical, og:url, sitemap).
+2. `src/constants/pagesMeta.ts` → `SITE_NAME`, `SITE_URL` (з них title, canonical, og:url, sitemap).
 3. `index.html` → title, description, og:\* (як у головної в `src/constants/pagesMeta.ts`),
    `theme-color` і колір фону в inline-стилі (= `theme.colors.background`).
 4. `src/constants/theme.ts` → кольори, брейкпоінти, сітка, радіуси, шрифти з макета.
@@ -63,19 +62,19 @@ npm run typecheck   # tsc для src і для vite.config.ts
 
 ```
 src/
-├── main.tsx                 # провайдери: Helmet, Router, тема, MotionConfig
+├── main.tsx                 # провайдери: Helmet, Router, тема
 ├── components/
 │   ├── App.tsx              # Lenis + маршрути
-│   ├── Common/              # SharedLayout, Header, Footer, PageContainer, PageMain, Section,
-│   │                        # PageMeta, GlobalStyles, Loader, межа помилок, модалки
-│   ├── ErrorPage/           # NotFound, ErrorScreen
-│   └── MainPage/            # Main + зразок секції HeroSection
+│   ├── Common/              # SharedLayout, Header, Footer, PageContainer, PageMeta,
+│   │                        # GlobalStyles, Loader, ChunkErrorBoundary, ModalWin
+│   ├── MainPage/            # Main + зразок секції HeroSection
+│   └── NotFoundPage/        # NotFound
 ├── pages/                   # MainPage, NotFoundPage
 ├── constants/               # theme, pagePaths, pagesMeta, index
-├── styles/                  # typography, containerPadding
-├── hooks/                   # скрол, модалки, фокус-трап
-├── utils/                   # метатеги сторінок, блокування скролу, межа помилок
-├── types/
+├── styles/                  # typography
+├── hooks/                   # useScrollToTop, useModal
+├── utils/                   # метатеги сторінок, автоперезавантаження після деплою
+├── types/                   # hooks.types
 └── icons/Common/logo.svg    # ассети — по теках сторінок, як компоненти
 scripts/                     # gen-pages, prerender, gen-sitemap
 ```

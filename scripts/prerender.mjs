@@ -233,7 +233,7 @@ const renderPage = async (tab, url) => {
 
   await waitIdle();
   await evaluate(tab, `new Promise((resolve) => {
-    const check = () => document.querySelector('#root main') ? resolve() : setTimeout(check, 100);
+    const check = () => document.querySelector('#root main h1') ? resolve() : setTimeout(check, 100);
     check();
   })`);
   await evaluate(tab, 'document.fonts.ready.then(() => true)');

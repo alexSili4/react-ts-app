@@ -68,7 +68,7 @@ const GlobalStyles: FC = () => (
         Для тих, кому рух завдає дискомфорту (вестибулярні розлади, мігрень),
         анімації не вимикаємо повністю, а стискаємо до майже миттєвих: так
         зникає рух, але лишаються кінцеві стани, на які спирається розкладка.
-        Для framer-motion те саме робить reducedMotion у main.tsx.
+        Для framer-motion (коли його додадуть) — reducedMotion у MotionConfig.
       */
       @media (prefers-reduced-motion: reduce) {
         *,

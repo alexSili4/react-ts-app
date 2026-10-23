@@ -2,23 +2,25 @@ import { FC, Suspense } from 'react';
 import { Outlet } from 'react-router';
 import Loader from '@CommonComponents/Loader';
 import Header from '@CommonComponents/Header';
+import Footer from '@CommonComponents/Footer';
 import ChunkErrorBoundary from '@CommonComponents/ChunkErrorBoundary';
-import PageReadySignal from '@CommonComponents/PageReadySignal';
+import { Main } from './SharedLayout.styled';
 
-// Межа охоплює і хедер, і Suspense навмисно. Усі сторінки вантажаться ліниво
-// (App.tsx), і без межі будь-який невдалий import() розмотує дерево до кореня:
-// застосунок знімається, і користувач бачить білу сторінку.
+// Каркас кожної сторінки: хедер, <main> зі сторінкою, футер. Сторінка
+// вантажиться ліниво, тож поки чанк їде — Loader.
 //
-// Лишати хедер видимим сенсу немає: межа не скидається при зміні роуту, тож
-// навігація з фолбеку однаково нікуди б не привела.
+// Межа помилок над усім навмисно: без неї будь-який невдалий import()
+// розмотує дерево до кореня, і користувач бачить білу сторінку.
 const SharedLayout: FC = () => {
   return (
     <ChunkErrorBoundary>
       <Header />
-      <Suspense fallback={<Loader />}>
-        <PageReadySignal />
-        <Outlet />
-      </Suspense>
+      <Main>
+        <Suspense fallback={<Loader />}>
+          <Outlet />
+        </Suspense>
+      </Main>
+      <Footer />
     </ChunkErrorBoundary>
   );
 };
