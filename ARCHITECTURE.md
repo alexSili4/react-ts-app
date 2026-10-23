@@ -19,7 +19,6 @@
 | UI              | `react`, `react-dom`                                    | 18.3   |
 | Роутинг         | `react-router` (декларативний режим)                    | 7.18   |
 | Стилі           | `@emotion/react`, `@emotion/styled`                     | 11     |
-| Плавний скрол   | `lenis`                                                 | 1.3    |
 | Метатеги        | `react-helmet-async`                                    | 3      |
 | Скидання стилів | `modern-normalize`                                      | 2      |
 | Збірка          | `vite`, `@vitejs/plugin-react`, `vite-tsconfig-paths`  | 6.4    |
@@ -32,6 +31,7 @@
 | ----------------- | ---------------------------------------------------------------------------------------- |
 | Анімації          | `framer-motion@^11` + `@emotion/is-prop-valid@^1` (див. 8)                               |
 | SVG як компоненти | `vite-plugin-svgr@^4` (dev; див. 9)                                                      |
+| Плавний скрол     | `lenis@^1` (див. 8)                                                                      |
 | HTTP-запити       | `axios@^1`                                                                               |
 | Форми             | `react-hook-form@^7`                                                                     |
 | Локалізація       | `i18next@^25`, `react-i18next@^15`, `i18next-browser-languagedetector@^8`, `i18next-resources-to-backend@^1` |
@@ -55,7 +55,7 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
     ├── main.tsx          # провайдери й рендер
     ├── vite-env.d.ts     # типи середовища (Vite, змінні .env)
     ├── components/
-    │   ├── App.tsx       # Lenis + маршрути
+    │   ├── App.tsx       # маршрути
     │   ├── Common/       # спільне для кількох сторінок
     │   └── <Name>Page/   # компоненти однієї сторінки
     ├── pages/            # <Name>Page.tsx — збірка сторінки
@@ -289,7 +289,7 @@ export default HeroSection;
 `hooks/index.ts`. Типи параметрів і результату — `types/hooks.types.ts`
 (`IUse<Name>Props`, `IUse<Name>`). Є:
 
-- `useModal` — усе для модалки: Escape, клік по фону, блокування скролу (і Lenis), фокус
+- `useModal` — усе для модалки: Escape, клік по фону, блокування скролу, фокус
   усередині діалогу й повернення фокусу після закриття.
 
 **Утиліти** — `src/utils/<name>.ts`: функція або тісно повʼязана група функцій на файл, без
@@ -326,13 +326,26 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 відсотках і лише по вертикалі (`constants/viewport.ts`): піксельні `margin` ламаються на вузьких
 екранах.
 
-**Скрол.** Керує Lenis (`App.tsx`). Блок із власною прокруткою — атрибут `data-lenis-prevent`.
-Прокрутки вгору при переході між сторінками в каркасі немає: браузер лишає позицію
-попередньої сторінки. Коли знадобиться — хук `useScrollToTop` з викликом в `App.tsx`
-(`git show 0516229:src/hooks/useScrollToTop.ts`: `scrollRestoration = 'manual'`, нативний
-`scrollTo(0, 0)` і `lenis.scrollTo(0, { immediate: true, force: true })` у `useLayoutEffect`).
-Блокувати прокрутку сторінки — лише через `useModal` (лічильник + зупинка Lenis), не
+**Скрол.** Нативний. Блокувати прокрутку сторінки — лише через `useModal` (лічильник), не
 `document.body.style` напряму.
+
+Прокрутки вгору при переході між сторінками в каркасі немає: браузер лишає позицію
+попередньої сторінки. Коли знадобиться — хук `useScrollToTop` з викликом в `App.tsx`:
+`history.scrollRestoration = 'manual'` один раз і `window.scrollTo(0, 0)` у `useLayoutEffect` на
+зміну `pathname` (`git show 0516229:src/hooks/useScrollToTop.ts`).
+
+**Плавний скрол (Lenis)** — коли його вимагає дизайн. Точки інтеграції (робоча версія —
+`git show 02c93ac:src/components/App.tsx` і `git show 02c93ac:src/hooks/useModal.ts`):
+
+- `App.tsx`: усе дерево в `<ReactLenis root ref={lenisRef} options={{ virtualScroll }}>`;
+  `virtualScroll` пропускає touch-події з `cancelable: false`, поки Lenis зупинений, — інакше Chrome
+  сипле в консоль `[Intervention]`;
+- `useModal`: `lenis.stop()` разом із блокуванням скролу й `lenis.start()`, коли лічильник
+  повернувся до нуля (`useLenis()` з `lenis/react`);
+- блок із власною прокруткою (діалог модалки, горизонтальна стрічка) — атрибут
+  `data-lenis-prevent`;
+- `useScrollToTop` — ще й `lenis.scrollTo(0, { immediate: true, force: true })`: зупинений чи
+  заблокований Lenis без `force` виклик ігнорує.
 
 **Модалки.** `<ModalWin isOpen onClose ariaLabel>{вміст}</ModalWin>` — портал, фон, діалог з
 `role='dialog'`, `aria-modal`, фокусом і закриттям. Модалка з власною розміткою (меню на весь
@@ -459,4 +472,30 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 | Булевий проп / стан             | `is…`, `show…`, `has…`               | `isOpen`, `showMenu`           |
 | Обробник                        | `on<Що><Подія>`                      | `onCloseBtnClick`              |
 
-Код, коментарі й тексти — українською. Коментар пояснює **чому**, а не що робить код.
+Код, коментарі й тексти — українською.
+
+---
+
+## 13. Коментарі
+
+Коментуємо **лише неочевидне**. Коментар до очевидного заборонений.
+
+Коментар потрібен, коли читач коду сам не здогадається:
+
+- **чому** зроблено саме так, а не простішим способом (`useTransitions={false}`, лічильник замість
+  прапорця в `useModal`);
+- про обмеження й пастки, які не видно з коду (модуль виконує Node під час збірки; без цього
+  атрибута Helmet задвоїть теги);
+- про звʼязок між файлами, який треба тримати синхронно (`PageMeta` ↔ `gen-pages.mjs`);
+- звідки взялось магічне число.
+
+Заборонено:
+
+- переказувати, що робить код, чи повторювати імʼя функції, компонента, змінної;
+- «заготовка», «зразок», «тут буде…» — для цього є ARCHITECTURE.md і README;
+- історія змін: «раніше було…», «додав…», «тепер…» — для цього є git;
+- розділові й декоративні коментарі; закоментований код, якщо він не вимкнений свідомо (тоді —
+  з поясненням, чому й до коли).
+
+Якщо без коментаря незрозуміло, **що** робить код, — спершу перейменувати або спростити код.
+Коментар коротший за код, який пояснює; документаційний текст — у ARCHITECTURE.md, не в коді.

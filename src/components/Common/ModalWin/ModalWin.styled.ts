@@ -11,7 +11,6 @@ export const Backdrop = styled.div`
   background-color: ${({ theme }) => theme.colors.backdrop};
 `;
 
-// Власна прокрутка довгого вмісту; Lenis її не перехоплює (data-lenis-prevent).
 export const Dialog = styled.div`
   max-width: 100%;
   max-height: 100%;

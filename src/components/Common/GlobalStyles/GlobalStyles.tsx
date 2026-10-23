@@ -3,8 +3,6 @@ import { FC } from 'react';
 import { Global, css } from '@emotion/react';
 import { theme } from '@/constants';
 
-// Базові стилі документа. Власні шрифти (@font-face) — теж сюди, по одному
-// блоку на накреслення (ARCHITECTURE.md → «Шрифти»).
 const GlobalStyles: FC = () => (
   <Global
     styles={css`
@@ -68,7 +66,6 @@ const GlobalStyles: FC = () => (
         Для тих, кому рух завдає дискомфорту (вестибулярні розлади, мігрень),
         анімації не вимикаємо повністю, а стискаємо до майже миттєвих: так
         зникає рух, але лишаються кінцеві стани, на які спирається розкладка.
-        Для framer-motion (коли його додадуть) — reducedMotion у MotionConfig.
       */
       @media (prefers-reduced-motion: reduce) {
         *,

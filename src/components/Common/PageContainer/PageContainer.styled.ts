@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 
-// Контейнер сітки: ширина не більша за grid.maxWidth, бічні поля — за
-// брейкпоінтами з теми.
 export const PageContainer = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.grid.maxWidth}px;

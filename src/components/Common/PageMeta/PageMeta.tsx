@@ -4,14 +4,9 @@ import { useLocation } from 'react-router';
 import { getPageMetaTags } from '@/utils';
 import { IProps } from './PageMeta.types';
 
-// Метатеги сторінки: title, description, canonical і og:*. Ставить кожна
-// сторінка з даних pagesMeta.
-//
-// Ті самі теги збірка кладе в сирий HTML кожного маршруту
-// (scripts/gen-pages.mjs) — для скребачок соцмереж і роботів, що не виконують
-// JS. Значення рахує одна функція, getPageMetaTags, тож HTML і Helmet не
-// розходяться. Набір тегів тут і в gen-pages.mjs має збігатися: Helmet
-// замінює лише теги з data-rh="true".
+// Набір тегів тут і в renderMetaTags (scripts/gen-pages.mjs) має збігатися:
+// там ті самі теги лягають у сирий HTML з data-rh="true", і Helmet замінює
+// лише їх.
 const PageMeta: FC<IProps> = (props) => {
   const { pathname } = useLocation();
   const { title, description, canonical, image, noIndex } = getPageMetaTags(

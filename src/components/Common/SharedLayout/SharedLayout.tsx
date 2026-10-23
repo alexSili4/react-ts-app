@@ -6,9 +6,6 @@ import Footer from '@CommonComponents/Footer';
 import ChunkErrorBoundary from '@CommonComponents/ChunkErrorBoundary';
 import { Main } from './SharedLayout.styled';
 
-// Каркас кожної сторінки: хедер, <main> зі сторінкою, футер. Сторінка
-// вантажиться ліниво, тож поки чанк їде — Loader.
-//
 // Межа помилок над усім навмисно: без неї будь-який невдалий import()
 // розмотує дерево до кореня, і користувач бачить білу сторінку.
 const SharedLayout: FC = () => {

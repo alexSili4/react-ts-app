@@ -1,15 +1,10 @@
 import PagePaths from '@/constants/pagePaths';
 import { IPageMetaData, pagesMeta } from '@/constants/pagesMeta';
 
-// Шлях сторінки «не знайдено» — для dist/404.html (scripts/gen-pages.mjs).
 export const NOT_FOUND_PATH: string = PagePaths.notFound;
 
-// Усі адреси сайту з метаданими — для збірки: HTML на кожен маршрут
-// (scripts/gen-pages.mjs), пререндер (scripts/prerender.mjs) і sitemap.xml.
-// Сайт у браузері її не використовує: сторінки беруть метадані з pagesMeta.
-//
-// Динамічні сторінки додаються сюди з тих самих даних, з яких їх рендерить
-// сайт, — інакше адреса лишиться без власних метатегів, знімка й місця в
+// Динамічні сторінки треба додати сюди з тих самих даних, з яких їх рендерить
+// сайт, — інакше адреса лишиться без метатегів у HTML, знімка й місця в
 // sitemap:
 //
 //   ...Object.fromEntries(
@@ -19,9 +14,8 @@ export const NOT_FOUND_PATH: string = PagePaths.notFound;
 //     ])
 //   ),
 //
-// Модуль виконується в Node (scripts/lib/import-ts.mjs): без звернень до window
-// і document. Імпортовані картинки там — порожні рядки, тож og:image — лише
-// абсолютна адреса файла з public/ (getAbsoluteUrl('/og/x.jpg')).
+// Модуль виконує Node під час збірки: без window і document, а імпортовані
+// картинки там — порожні рядки, тож og:image — лише адреса файла з public/.
 const getPageMetaMap = (): Record<string, IPageMetaData> => ({ ...pagesMeta });
 
 export default getPageMetaMap;

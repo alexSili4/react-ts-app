@@ -4,9 +4,6 @@ import { useModal } from '@/hooks';
 import { IProps } from './ModalWin.types';
 import { Backdrop, Dialog } from './ModalWin.styled';
 
-// Модалка: портал у #modal-root (index.html), фон, діалог. Поведінку —
-// Escape, клік по фону, блокування скролу, фокус — дає useModal. Вигляд
-// вмісту — з макета, через children.
 const ModalWin: FC<IProps> = ({ isOpen, onClose, ariaLabel, children }) => {
   const { dialogRef, onBackdropClick } = useModal({ isOpen, onClose });
   const modalRoot = document.getElementById('modal-root');
@@ -16,7 +13,8 @@ const ModalWin: FC<IProps> = ({ isOpen, onClose, ariaLabel, children }) => {
   }
 
   return createPortal(
-    // Фон закривається мишею; з клавіатури — Escape (useModal).
+    // Фон закривається лише мишею; з клавіатури — Escape (useModal), тому
+    // role='presentation', а не кнопка.
     <Backdrop role='presentation' onClick={onBackdropClick}>
       <Dialog
         ref={dialogRef}
@@ -24,7 +22,6 @@ const ModalWin: FC<IProps> = ({ isOpen, onClose, ariaLabel, children }) => {
         aria-modal='true'
         aria-label={ariaLabel}
         tabIndex={-1}
-        data-lenis-prevent
       >
         {children}
       </Dialog>

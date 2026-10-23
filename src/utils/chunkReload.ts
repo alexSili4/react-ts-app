@@ -1,14 +1,9 @@
 import { ComponentType, lazy, LazyExoticComponent } from 'react';
 
-// Після деплою вкладка, відкрита раніше, просить лінивий чанк за старим
-// хешованим імʼям, якого на сервері вже немає. ChunkErrorBoundary тоді один
-// раз тихо перезавантажує сторінку; цей прапорець не дає зациклитись, якщо
-// чанк недоступний насправді.
-//
-// Прапорець у sessionStorage, а не в стані React: перезавантаження стирає
-// стан застосунку. sessionStorage кидає SecurityError, коли в браузері
-// заблоковані cookies, — тоді вважаємо, що спроба вже була: краще одразу
-// показати повідомлення, ніж ризикувати нескінченним перезавантаженням.
+// Прапорець не дає ChunkErrorBoundary перезавантажувати сторінку по колу,
+// якщо чанк недоступний насправді, а не через деплой. У sessionStorage, бо
+// перезавантаження стирає стан React. sessionStorage кидає SecurityError, коли
+// заблоковані cookies, — тоді вважаємо, що спроба вже була.
 const RELOAD_ATTEMPT_KEY = 'chunk-reload-attempted';
 
 export const getHasChunkReloadAttempt = (): boolean => {
@@ -35,8 +30,8 @@ export const clearChunkReloadAttempt = (): void => {
   }
 };
 
-// lazy() для сторінок: чанк приїхав — отже, деплой (якщо був) уже
-// підхоплено, і на наступний автоперезавантаження можна дозволити знову.
+// Чанк приїхав — деплой (якщо був) підхоплено, і на наступний
+// автоперезавантаження можна дозволити знову.
 export const lazyPage = <T extends ComponentType>(
   load: () => Promise<{ default: T }>
 ): LazyExoticComponent<T> =>

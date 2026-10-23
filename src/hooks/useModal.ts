@@ -1,5 +1,4 @@
 import { MouseEvent, useEffect, useRef } from 'react';
-import { useLenis } from 'lenis/react';
 import { IUseModal, IUseModalProps } from '@/types/hooks.types';
 
 const FOCUSABLE = [
@@ -16,19 +15,14 @@ const getFocusable = (container: HTMLElement): HTMLElement[] =>
     (el) => el.getClientRects().length > 0
   );
 
-// Лічильник, а не прапорець: модалки накладаються (з меню відкривається
-// інша модалка), і та, що закриється першою, не повинна повертати скрол під
-// тією, що ще відкрита. Ширину смуги прокрутки не компенсуємо: місце під неї
-// тримає scrollbar-gutter: stable (GlobalStyles).
+// Лічильник, а не прапорець: модалки накладаються, і та, що закриється
+// першою, не повинна повертати скрол під тією, що ще відкрита. Ширину смуги
+// прокрутки не компенсуємо: місце під неї тримає scrollbar-gutter (GlobalStyles).
 let lockCount = 0;
 let savedOverflow = '';
 
-// Усе, що потрібно модалці: закриття Escape і кліком по фону, блокування
-// скролу (і Lenis), фокус усередині діалогу, поки він відкритий, і повернення
-// фокусу на тригер після закриття. Розмітку дає ModalWin.
 const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const lenis = useLenis();
   // Через ref, щоб інлайновий onClose не перезапускав ефект щорендер.
   const onCloseRef = useRef(onClose);
 
@@ -50,8 +44,6 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
       savedOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
     }
-
-    lenis?.stop();
 
     // Фокус — на сам контейнер (tabIndex={-1}), а не на першу кнопку: інакше
     // кнопка закриття світилась би фокусом навіть при відкритті мишею.
@@ -102,12 +94,11 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
 
       if (lockCount === 0) {
         document.body.style.overflow = savedOverflow;
-        lenis?.start();
       }
 
       trigger?.focus({ preventScroll: true });
     };
-  }, [isOpen, lenis]);
+  }, [isOpen]);
 
   const onBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {

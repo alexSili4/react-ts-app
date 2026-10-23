@@ -64,7 +64,7 @@ npm run typecheck   # tsc для src і для vite.config.ts
 src/
 ├── main.tsx                 # провайдери: Helmet, Router, тема
 ├── components/
-│   ├── App.tsx              # Lenis + маршрути
+│   ├── App.tsx              # маршрути
 │   ├── Common/              # SharedLayout, Header, Footer, PageContainer, PageMeta,
 │   │                        # GlobalStyles, Loader, ChunkErrorBoundary, ModalWin
 │   ├── MainPage/            # Main + зразок секції HeroSection

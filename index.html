@@ -6,20 +6,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!--
-      Метатеги за замовчуванням. У збірці scripts/gen-pages.mjs замінює
-      <title> і всі теги з data-rh="true" тегами конкретної сторінки й пише
-      dist/<шлях>.html — їх бачать скребачки соцмереж і роботи без JS. Тут
-      вони лишаються для dev-сервера й адрес, яких немає в getPageMetaMap.
-      Після запуску React сторінкові теги ставить PageMeta (react-helmet-async).
-
-      data-rh="true" — лише на тегах, які PageMeta перевизначає: Helmet
-      прибирає зі <head> тільки їх. Без атрибута сторінкові теги лягли б поруч
-      із загальними (два description, два og:title). Теги, яких PageMeta не
-      рендерить (theme-color, og:site_name, og:locale, twitter:card), не
-      позначати — інакше Helmet їх видалить.
-
-      Тексти title і description — ті самі, що в головної в
-      src/constants/pagesMeta.ts.
+      Збірка (scripts/gen-pages.mjs) замінює <title> і теги з data-rh="true"
+      тегами кожної сторінки; ці — для dev і адрес поза getPageMetaMap.
+      data-rh="true" — лише на тегах, які перевизначає PageMeta: Helmet
+      прибирає тільки їх, інакше теги задвоїлись би, а без атрибута — видалить
+      і ті, яких PageMeta не рендерить.
     -->
     <title>Назва сайту</title>
     <meta data-rh="true" name="description" content="Опис сайту, 150–160 символів." />
@@ -36,11 +27,9 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <!--
-      До завантаження JS:
-      - фон — той самий, що theme.colors.background, інакше перший кадр білий;
-      - знімок пререндера ([data-prerender], scripts/prerender.mjs) — для
-        роботів: людям він без стилів, тож прихований, а createRoot при
-        старті замінює його справжньою сторінкою.
+      Фон = theme.colors.background, інакше до завантаження JS перший кадр
+      білий. Знімок пререндера — для роботів; людям він без стилів, тож
+      прихований, доки createRoot не замінить його сторінкою.
     -->
     <style>
       html {
@@ -54,7 +43,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Сюди порталом рендеряться модалки (ModalWin) -->
     <div id="modal-root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

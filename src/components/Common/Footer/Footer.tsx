@@ -3,7 +3,6 @@ import { SITE_NAME } from '@/constants/pagesMeta';
 import PageContainer from '@CommonComponents/PageContainer';
 import { Copyright, StyledFooter } from './Footer.styled';
 
-// Заготовка: лише копірайт. Контакти, соцмережі, навігація — з макета.
 const Footer: FC = () => {
   return (
     <StyledFooter>

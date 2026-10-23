@@ -15,8 +15,6 @@ const CHUNK_ERROR_PATTERN =
 const getIsChunkLoadError = (error: Error): boolean =>
   CHUNK_ERROR_PATTERN.test(error.message);
 
-// Класовий компонент тут не стилістичний вибір: ловити помилки рендеру вміє
-// лише componentDidCatch, хука-еквівалента React не дає.
 class ChunkErrorBoundary extends Component<IProps, IState> {
   state: IState = { hasError: false };
 
@@ -51,7 +49,6 @@ class ChunkErrorBoundary extends Component<IProps, IState> {
       return this.props.children;
     }
 
-    // Тексти літералами: хуки в класовому компоненті недоступні.
     return (
       <Container>
         <Title>Сторінка не завантажилась</Title>

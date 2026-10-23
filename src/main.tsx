@@ -11,11 +11,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HelmetProvider>
       {/*
-        useTransitions={false} — свідомо: під час переходу на ще не
-        завантажену сторінку має бути видно Loader (Suspense у SharedLayout).
-        За замовчуванням React Router 7 загортає навігацію в startTransition, і
-        тоді React тримав би на екрані попередню сторінку, доки не приїде чанк
-        нової, — без жодного індикатора.
+        Без useTransitions={false} React Router 7 загортає навігацію в
+        startTransition, і на ще не завантаженій сторінці замість Loader висіла
+        б попередня — без жодного індикатора.
       */}
       <BrowserRouter useTransitions={false}>
         <ThemeProvider theme={theme}>

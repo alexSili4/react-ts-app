@@ -10,7 +10,7 @@
 ## Проєкт
 
 SPA на Vite 6.4 + React 18.3 + TypeScript (strict), React Router 7 (декларативний режим),
-emotion, Lenis, react-helmet-async. Збірка — `dist/` з окремим HTML і знімком
+emotion, react-helmet-async. Збірка — `dist/` з окремим HTML і знімком
 контенту на кожну сторінку.
 
 **Мова:** код, коментарі, тексти комітів і звіти — українською. Відповідати користувачу
@@ -56,7 +56,7 @@ npm run build       # typecheck → vite build → pages → prerender → sitem
 - Аліаси — лише в `paths` у `tsconfig.json`; `resolve.alias` у `vite.config.ts` для шляхів проєкту
   не заводити.
 - Модалка — `ModalWin` або власний компонент на `useModal`; блокування скролу сторінки — лише
-  через `useModal`. Блок із власною прокруткою — `data-lenis-prevent`.
+  через `useModal`.
 - Сторінка — лише `PageMeta` і склад секцій: хедер, `<main>` і футер дає `SharedLayout`. Маршрут —
   через `lazyPage`, не голий `lazy`.
 - Кожна сторінка: `PageMeta` з `pagesMeta`, рівно один `h1`, рендер без дій користувача. Динамічна
@@ -75,7 +75,11 @@ npm run build       # typecheck → vite build → pages → prerender → sitem
 ## Код
 
 - TypeScript strict, без `any` і `// @ts-ignore`. `eslint-disable` — лише точково, з поясненням.
-- Коментарі пояснюють **чому**, а не що робить код. Без коментарів-наративів («додав…», «тепер…»).
+- **Коментуємо лише неочевидне** — чому зроблено саме так, обмеження й пастки, звʼязки між
+  файлами, походження магічних чисел. **Коментарі до очевидного заборонені:** переказ того, що
+  робить код, повтор імені, «заготовка», історія змін («раніше…», «додав…»), розділові
+  коментарі. Незрозуміло, що робить код, — перейменувати чи спростити, а не коментувати.
+  Деталі — ARCHITECTURE.md, розділ 13.
 - Перенесення з `newsun2`: там тека `General/` (`@GeneralComponents`) і `GeneralContainer`, тут —
   `Common/` (`@CommonComponents`) і `PageContainer`; ассети там лежать не по теках сторінок —
   класти за правилами ARCHITECTURE.md.

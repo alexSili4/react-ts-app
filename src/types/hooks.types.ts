@@ -6,8 +6,7 @@ export interface IUseModalProps {
 }
 
 export interface IUseModal {
-  // Вішається на контейнер діалогу: фокус-трап і повернення фокусу.
   dialogRef: RefObject<HTMLDivElement>;
-  // Закриває модалку кліком по фону, але не по самому діалогу.
+  // Лише клік по самому фону, не по діалогу.
   onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
 }

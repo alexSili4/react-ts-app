@@ -2,33 +2,23 @@ declare module '@emotion/react' {
   export interface Theme extends ITheme {}
 }
 
-// Єдине джерело дизайн-токенів. Кольори, шрифти, брейкпоінти, сітка, радіуси,
-// z-index і тривалості — лише звідси: літерали повз тему в компонентах не
-// пишемо. Значення нижче — нейтральна заготовка, на старті проєкту замінити
-// токенами з макета. Новий токен — спершу в ITheme, потім значення.
 interface ITheme {
   colors: {
-    // Фон сторінки й полотна під смугою прокрутки. Той самий колір — в
-    // inline-стилі index.html і в theme-color.
+    // Той самий колір — в inline-стилі й theme-color в index.html.
     background: string;
-    // Фон карток і панелей поверх background.
     surface: string;
     text: string;
-    // Другорядний текст: підписи, плейсхолдери.
     textSecondary: string;
     accent: string;
     error: string;
     white: string;
     black: string;
-    // Затемнення під модалкою.
     backdrop: string;
   };
   fontFamily: {
     main: string;
   };
-  // Типографічна шкала з макета: імена — як у Figma, щоб дизайнер і код
-  // говорили однією мовою. Компонент бере розмір і висоту рядка звідси, а не
-  // пише px від себе.
+  // Імена — як у Figma, щоб дизайнер і код говорили однією мовою.
   fontSize: {
     h1: string;
     body: string;
@@ -38,7 +28,7 @@ interface ITheme {
     heading: number;
     body: number;
   };
-  // Mobile-first: значення — min-width. Імена й значення — з макета.
+  // Mobile-first: значення — min-width.
   breakpoints: {
     tablet: number;
     laptop: number;
@@ -51,7 +41,6 @@ interface ITheme {
       laptop: number;
     };
     gutter: number;
-    // Бічні поля контейнера (styles/containerPadding.ts).
     margin: {
       mobile: number;
       tablet: number;
@@ -74,9 +63,7 @@ interface ITheme {
     modal: number;
   };
   transitionDurationAndFunc: {
-    // Ховер, фокус, відкриття й закриття — усі інтерактивні елементи.
     all: string;
-    // Швидкі супутні зміни: натиск, дрібні стани.
     fast: string;
   };
   spacing: (value?: number) => number;
@@ -96,8 +83,6 @@ const theme: ITheme = {
     black: '#000000',
     backdrop: 'rgba(0, 0, 0, 0.6)',
   },
-  // Системні шрифти, доки в проєкті немає власних. Власний шрифт — файл у
-  // src/fonts/, @font-face у GlobalStyles, імʼя родини — тут (ARCHITECTURE.md).
   fontFamily: {
     main: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
