@@ -32,17 +32,24 @@ Node — **22** (`.nvmrc`), мінімум 20 (вимога React Router 7).
 
 ## Швидкий старт
 
+Темплейт живе на GitHub: [alexSili4/react-ts-app](https://github.com/alexSili4/react-ts-app)
+(Template repository). Новий проєкт — кнопкою **Use this template** на GitHub (одразу новий
+репозиторій) або локально:
+
 ```powershell
-# 1. Скопіювати темплейт у теку нового проєкту без node_modules і dist
-robocopy D:\work\react-app D:\work\<проєкт> /E /XD node_modules dist
+# 1. Отримати темплейт без історії git
+npx degit alexSili4/react-ts-app <проєкт>
 
 # 2. Встановити залежності точно за lock-файлом
-cd D:\work\<проєкт>
+cd <проєкт>
 npm ci
 
 # 3. Запустити
 npm run dev
 ```
+
+Зміни самого темплейту — комітами в `main` цього репозиторію; нові проєкти беруть його поточний
+стан, уже створені проєкти він не змінює.
 
 Якщо проєкт живе всередині бекенд-репозиторію (як `newsun2/starter`), копіювати в його підтеку
 й далі — за [docs/backend-integration.md](docs/backend-integration.md).
