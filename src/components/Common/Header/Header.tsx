@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { PagePaths } from '@/constants';
 import PageContainer from '@CommonComponents/PageContainer';
-import Logo from '@/icons/logo.svg?react';
+import Logo from '@/icons/Common/logo.svg?react';
 import { Inner, LogoLink, StyledHeader } from './Header.styled';
 
 // Заготовка: лише лого. Навігація — список із constants/navLinks.ts,

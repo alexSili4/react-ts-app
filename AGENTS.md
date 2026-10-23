@@ -47,6 +47,10 @@ npm run build       # typecheck → vite build → pages → prerender → sitem
 
 ## Інваріанти, які легко зламати
 
+- Вміст сторінки — у теці з її іменем, однаковим скрізь: `components/AboutPage/`,
+  `images/AboutPage/`, `icons/AboutPage/`, `video/AboutPage/`. Спільне для 2+ сторінок —
+  у `Common/` там само; ассет чи компонент, що знадобився на другій сторінці, переїжджає в
+  `Common/`. Файли ассетів — kebab-case.
 - Кольори, шрифти, брейкпоінти, z-index, тривалості — лише з `theme`; літералів у компонентах
   немає.
 - Аліаси — лише в `paths` у `tsconfig.json`; `resolve.alias` у `vite.config.ts` для шляхів проєкту

@@ -64,10 +64,10 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
     ├── hooks/
     ├── utils/
     ├── types/
-    ├── icons/
-    ├── images/
+    ├── icons/            # ┐
+    ├── images/           # ├ Common/, <Name>Page/ — як у components/
+    ├── video/            # ┘
     ├── fonts/
-    ├── video/
     ├── services/
     └── i18n/
 ```
@@ -83,10 +83,39 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 | `hooks`             | є                    | скрол і модалки                                                         |
 | `utils`             | є                    | метатеги сторінок, блокування скролу, межа помилок                      |
 | `types`             | є                    | типи подій і хуків                                                      |
-| `icons`             | є (`logo.svg`)       | SVG                                                                     |
-| `images`, `fonts`, `video` | за потреби    | растр, шрифти, відео                                                    |
+| `icons`             | є (`Common/logo.svg`) | SVG — по теках сторінок                                               |
+| `images`, `video`   | за потреби           | растр і відео — по теках сторінок                                      |
+| `fonts`             | за потреби           | шрифти — по теках родин                                                |
 | `services`          | за потреби           | HTTP-шар                                                                |
 | `i18n`              | за потреби           | переклади                                                               |
+
+### Вміст сторінки — у теці сторінки
+
+Усе, що належить одній сторінці, лежить у теці з її іменем — однаковим у всіх місцях:
+компоненти, картинки, іконки, відео. Спільне для двох і більше сторінок — у теці `Common/` там
+само.
+
+```
+src/
+├── components/
+│   ├── Common/          Header/, Footer/, …
+│   └── AboutPage/       HeroSection/, TeamSection/, …
+├── images/
+│   ├── Common/          og-фон, фото для кількох сторінок
+│   └── AboutPage/       hero-bg.webp, team/anna.webp, …
+├── icons/
+│   ├── Common/          logo.svg, arrow.svg
+│   └── AboutPage/       values-star.svg
+└── video/
+    └── AboutPage/       hero-loop.mp4
+```
+
+- Імʼя теки — точно як у `components/`: `Common`, `MainPage`, `ErrorPage`, `<Name>Page`. Сторінка
+  без компонентів своєї теки (лише зі спільних) не потребує й тек ассетів.
+- Ассет, що знадобився на другій сторінці, переїжджає в `Common/` — так само, як компонент.
+- Усередині теки сторінки — підтеки секцій, коли файлів багато (`images/AboutPage/team/`).
+- Файли ассетів — kebab-case: `hero-bg.webp`, `arrow-right.svg`.
+- Шрифти — виняток: вони не належать сторінці, тека — за родиною (`fonts/inter/`).
 
 ### Напрям залежностей
 
@@ -311,10 +340,10 @@ Context: провайдер у `Common/<Name>Provider`, хук доступу `u
 
 | Що              | Де                          | Як                                                                  |
 | --------------- | --------------------------- | ------------------------------------------------------------------- |
-| SVG-іконки      | `src/icons/<група>/x.svg`   | `import Icon from '@/icons/x.svg?react'`; `aria-hidden` за замовчуванням (SVGR), змістовній — `role='img'` + `aria-label` |
-| Картинки        | `src/images/<сторінка>/`    | webp/jpg/png імпортом (Vite додає хеш); контентним — змістовний `alt`, декору — `alt=''` |
+| SVG-іконки      | `src/icons/<Сторінка>/`     | `import Icon from '@/icons/AboutPage/star.svg?react'`; `aria-hidden` за замовчуванням (SVGR), змістовній — `role='img'` + `aria-label` |
+| Картинки        | `src/images/<Сторінка>/`    | webp/jpg/png імпортом (Vite додає хеш); контентним — змістовний `alt`, декору — `alt=''` |
+| Відео           | `src/video/<Сторінка>/`     | mp4 імпортом; постер — перший кадр, `.webp` з тим самим імʼям у `src/images/<Сторінка>/posters/` |
 | Шрифти          | `src/fonts/<родина>/`       | лише `woff2`; експорт у `fonts/index.ts`, `@font-face` у `GlobalStyles` (без `local()`, `font-display: swap`), імʼя родини — `theme.fontFamily` |
-| Відео           | `src/video/`                | mp4 імпортом; постер — перший кадр у `src/images/posters/<імʼя>.webp` |
 | Файли «як є»    | `public/`                   | favicon, `robots.txt`, og-картинки (JPG 1200×630), Lottie JSON — через `fetch`, не `import` |
 
 - Головне зображення першого екрана — `<img>`/`<picture>` з `fetchpriority='high'`, не
@@ -387,7 +416,7 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 
 | Модуль              | Пакет                  | Файли                                                                    |
 | ------------------- | ---------------------- | ------------------------------------------------------------------------ |
-| Відео з автоплеєм   | —                      | `General/AutoplayVideo`, `hooks/useVideo.ts`, `src/images/posters/`      |
+| Відео з автоплеєм   | —                      | `General/AutoplayVideo`, `hooks/useVideo.ts`; у newsun2 постери лежать в одній теці `src/images/posters/` — при перенесенні змінити `import.meta.glob` в `AutoplayVideo` на `images/*/posters/*.webp` |
 | Слайдер             | `swiper`               | `src/styles/swiper.css` (`@layer swiper`), `General/SwiperNavButtons`, `hooks/useSwiperEdges.ts` |
 | Lottie              | `lottie-react`         | `General/InViewLottie`, `hooks/useLazyLottie.ts`, `hooks/useLottieData.ts`; аліас `lottie-web` → `lottie-web/build/player/lottie_svg` у `vite.config.ts` |
 | Біжучий рядок       | `react-fast-marquee`   | `MainPage/ClientsSectionMarquee`                                         |
@@ -406,6 +435,8 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 | ------------------------------- | ------------------------------------ | ------------------------------ |
 | Тека й файл компонента          | PascalCase                           | `HeroSection/HeroSection.tsx`  |
 | Тека групи компонентів          | PascalCase                           | `Common/`, `MainPage/`         |
+| Тека ассетів сторінки           | як група компонентів                 | `images/MainPage/`, `icons/Common/` |
+| Файл ассета                     | kebab-case                           | `hero-bg.webp`, `arrow-right.svg` |
 | Сторінка                        | `<Name>Page.tsx`                     | `ContactsPage.tsx`             |
 | Хук                             | `use<Name>.ts`                       | `useModalWin.ts`               |
 | Утиліта                         | camelCase, дієслово                  | `getPageMetaTags.ts`           |

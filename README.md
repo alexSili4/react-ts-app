@@ -76,7 +76,7 @@ src/
 ├── hooks/                   # скрол, модалки, фокус-трап
 ├── utils/                   # метатеги сторінок, блокування скролу, межа помилок
 ├── types/
-└── icons/logo.svg
+└── icons/Common/logo.svg    # ассети — по теках сторінок, як компоненти
 scripts/                     # gen-pages, prerender, gen-sitemap
 ```
 
