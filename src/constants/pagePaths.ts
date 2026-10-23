@@ -1,5 +1,6 @@
 // Усі шляхи сайту. Рядки в даних (navLinks, хлібні крихти) порівнюються з
-// ними напряму — тому правило no-unsafe-enum-comparison вимкнено в .eslintrc.
+// ними напряму — тому правило no-unsafe-enum-comparison вимкнено в
+// eslint.config.js.
 const enum PagePaths {
   root = '/',
   notFound = '/not-found',

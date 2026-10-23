@@ -20,8 +20,11 @@ npm run dev         # dev-сервер, http://localhost:5173
 npm run lint        # eslint 9 (eslint.config.js), 0 попереджень (типізовані правила: ~хвилина)
 npm run typecheck   # tsc для src і vite.config.ts
 npm run i18n:check  # повнота перекладів
-npm run build       # i18n:check → typecheck → vite build → sitemap
+npm run build       # i18n:check → typecheck → vite build → pages → prerender → sitemap
 ```
+
+Збірці потрібен Google Chrome (пререндер). Немає Chrome — `SKIP_PRERENDER=1` для перевірки
+збірки, але не для деплою.
 
 **Перед тим як сказати «готово»:** `npm run lint` і `npm run build` проходять без помилок. Зміна
 вигляду чи поведінки — ще й перевірка в браузері (`npm run dev`) на 375 px і на десктопі.
@@ -149,7 +152,20 @@ src/
   заголовка — `HiddenSectionTitle`.
 - `index.html`: статичний тег, який перевизначає `PageMeta`, має `data-rh="true"`; тег, якого
   `PageMeta` не рендерить, — не має (інакше Helmet його видалить).
-- `sitemap.xml` будується з `pagesMeta` (крім `noIndex`) — окремо його не правити.
+- Перелік сторінок для збірки — `src/utils/getPageMetaMap.ts` (статичні з `pagesMeta` +
+  динамічні). З нього збірка пише `dist/<шлях>.html` з метатегами сторінки
+  (`scripts/gen-pages.mjs`), пререндерить контент (`scripts/prerender.mjs`) і будує
+  `sitemap.xml`. Нова динамічна сторінка без запису там лишиться без метатегів у сирому HTML,
+  без знімка й поза sitemap.
+- Значення метатегів рахує лише `getPageMetaTags` (її беруть і `PageMeta`, і `gen-pages.mjs`).
+  Новий тег у `PageMeta` — той самий тег у `renderMetaTags` у `gen-pages.mjs`, інакше сирий HTML і
+  Helmet розійдуться.
+- Сторінка мусить пережити пререндер: рендериться без дій користувача, має `<main>` і рівно один
+  `h1` (без них збірка падає), без звернень до `window`/`document` на рівні модуля в даних, які
+  імпортує `getPageMetaMap` (його виконує Node). og:image — абсолютна адреса файла з `public/`
+  (імпортовані картинки в Node порожні).
+- Знімок — лише для роботів: він під прелоадером, а `createRoot` замінює його. Не перетворювати
+  це на гідрацію (`hydrateRoot`) без окремого рішення — код не готовий до SSR.
 
 ## Тексти (i18n)
 
@@ -207,6 +223,9 @@ src/
 - Вендорні чанки (`getVendorChunk` у `vite.config.ts`): emotion свідомо в одному чанку з React, а
   `commonjsHelpers` — окремим листовим чанком. Розділення ламає граф імпортів («Cannot access …
   before initialization» ще до рендеру). Загального vendor-чанка не заводити.
+- Після `vite build` скрипти дописують у `dist/`: `<шлях>.html` і `404.html` (`gen-pages.mjs`),
+  знімки в них (`prerender.mjs`), `sitemap.xml`. Порядок у `npm run build` важливий: пререндер
+  вставляє знімок у порожній `#root` HTML, який щойно написав `gen-pages.mjs`.
 - Lottie JSON — у `public/` і через `fetch(getPublicUrl(...))`, не `import('*.json')`: інакше
   мегабайти анімації осідають у бандлі. Картинки, відео й шрифти — у `src/` імпортом (Vite додає
   хеш в імʼя, кеш не залипає).

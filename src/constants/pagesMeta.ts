@@ -1,13 +1,13 @@
 import PagePaths from './pagePaths';
 
 // Метадані сторінок в одному місці. Читають їх PageMeta (метатеги після
-// запуску React) і scripts/gen-sitemap.mjs (sitemap.xml: усі шляхи звідси,
-// крім noIndex). Модуль свідомо легкий — його імпортують сторінки, а скрипт
-// виконує його в Node.
+// запуску React) і, через src/utils/getPageMetaMap.ts, скрипти збірки:
+// HTML кожного маршруту з його метатегами, пререндер і sitemap.xml. Модуль
+// свідомо легкий — його імпортують сторінки, а скрипти виконують його в Node.
 //
 // title — частина до « | <SITE_NAME>»; разом із суфіксом не довше ~60
 // символів, інакше Google обріже кінець. description — 150–160 символів.
-// Title і description головної повторюються в index.html.
+// Title і description головної повторюються в index.html (теги для dev).
 export interface IPageMetaData {
   title: string;
   description?: string;

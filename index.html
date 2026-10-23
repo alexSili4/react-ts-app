@@ -6,9 +6,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!--
-      Загальні метатеги — те, що бачать скребачки соцмереж (Facebook,
-      Telegram, LinkedIn): вони JS не виконують. Після запуску React
-      сторінкові теги ставить PageMeta (react-helmet-async).
+      Метатеги за замовчуванням. У збірці scripts/gen-pages.mjs замінює
+      <title> і всі теги з data-rh="true" тегами конкретної сторінки й пише
+      dist/<шлях>.html — їх бачать скребачки соцмереж і роботи без JS. Тут
+      вони лишаються для dev-сервера й адрес, яких немає в getPageMetaMap.
+      Після запуску React сторінкові теги ставить PageMeta (react-helmet-async).
 
       data-rh="true" — лише на тегах, які PageMeta перевизначає: Helmet
       прибирає зі <head> тільки їх. Без атрибута сторінкові теги лягли б поруч
