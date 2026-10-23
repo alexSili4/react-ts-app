@@ -20,7 +20,7 @@ const ErrorScreen: FC<IProps> = ({
   onActionClick,
 }) => {
   return (
-    <PageContainer isFullHeight>
+    <PageContainer>
       <Container>
         <Title>{title}</Title>
         <Message>{message}</Message>

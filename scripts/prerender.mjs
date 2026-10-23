@@ -3,17 +3,16 @@ import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
 import { spawn } from 'node:child_process';
-import importTs from './lib/import-ts.mjs';
 import { getPageFile, loadPages, OUT_DIR } from './lib/pages.mjs';
 
 // Пререндер: знімок готової сторінки для роботів, що не виконують JS
 // (AI-краулери GPTBot, ClaudeBot, PerplexityBot; частково Bing; прев'ю
-// месенджерів). Без нього в сирому HTML лише прелоадер і порожній #root.
+// месенджерів). Без нього в сирому HTML лише порожній #root.
 // Скрипт відкриває кожну сторінку з getPageMetaMap (крім noIndex) у headless
 // Chrome, чекає рендеру, прокручує до кінця (лінивий контент) і кладе вміст
 // #root у її HTML — dist/<шлях>.html, який перед цим написав
-// scripts/gen-pages.mjs. Людина знімка не бачить: він під прелоадером, а
-// createRoot при старті замінює вміст #root.
+// scripts/gen-pages.mjs. Людина знімка не бачить: обгортку [data-prerender]
+// ховає inline-стиль index.html, а createRoot при старті замінює вміст #root.
 //
 // Нових залежностей немає: Chrome керується через CDP (WebSocket і fetch уже є
 // в Node ≥ 22). Шлях до Chrome — CHROME_PATH або стандартні місця. Без Chrome
@@ -112,9 +111,10 @@ const server = http.createServer((req, res) => {
 // прихованих елементів (вимірювальні шари, мобільні й десктопні варіанти),
 // aria-hidden, скриптів, canvas і svg (назви іконок-посилань — в aria-label);
 // без class/style/data-*.
-// Картинки — лише з alt, без src/srcset, відео — геть: інакше браузер під
-// прелоадером тягнув усі картинки знімка (loading=lazy не рятує — сторінка без
-// стилів довга) і прелоадер знімався пізніше. Роботам без JS потрібен текст.
+// Картинки — лише з alt, без src/srcset, відео — геть: інакше браузер ще до
+// запуску React тягнув би всі картинки прихованого знімка (loading=lazy не
+// рятує — сторінка без стилів довга) і забирав канал у JS. Роботам без JS
+// потрібен текст.
 const SNAPSHOT = `(() => {
   const marked = [];
   for (const el of document.querySelectorAll('#root *')) {
@@ -258,7 +258,9 @@ const renderPage = async (tab, url) => {
 const { pages } = await loadPages();
 const routes = pages.filter(({ tags }) => !tags.noIndex).map(({ path: pagePath }) => pagePath);
 
-const { DEFAULT_LOCALE } = await importTs('src/i18n/languages.ts');
+// Мова — з <html lang> сторінки: знімок для роботів — завжди мовою сайту за
+// замовчуванням, а не мовою системи, де йде збірка.
+const DEFAULT_LOCALE = shell.match(/<html lang="([^"]+)"/)?.[1] ?? 'uk';
 const chromePath = findChrome();
 const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'prerender-chrome-'));
 
@@ -322,7 +324,10 @@ try {
       throw new Error(`prerender: у ${file} немає порожнього #root — запусти npm run build заново`);
     }
 
-    fs.writeFileSync(file, page.replace(EMPTY_ROOT, `<div id="root">${html}</div>`));
+    fs.writeFileSync(
+      file,
+      page.replace(EMPTY_ROOT, `<div id="root"><div data-prerender>${html}</div></div>`)
+    );
   }
 } finally {
   chrome.kill();

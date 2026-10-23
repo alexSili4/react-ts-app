@@ -16,7 +16,7 @@ const getFocusable = (container: HTMLElement): HTMLElement[] =>
 
 // Чим користувач працював останнім і що було сфокусоване перед відкриттям.
 // document.activeElement на момент відкриття не годиться: кнопки-тригери
-// роблять собі blur() (makeBlur), щоб після кліку мишею не лишались
+// роблять собі blur() (e.currentTarget.blur()), щоб після кліку мишею не лишались
 // :focus-стилі, — тож фокус на той момент уже на body.
 let lastInteraction: 'keyboard' | 'pointer' = 'pointer';
 let lastFocused: HTMLElement | null = null;
@@ -54,7 +54,7 @@ const startTracking = () => {
 // tabIndex={-1}) — не на першу кнопку, бо фокус на кнопці закриття вмикає її
 // свічення навіть при відкритті мишею. При закритті фокус повертається на
 // тригер, але лише для клавіатури: після кліку мишею це повернуло б ті самі
-// :focus-стилі, яких тригери позбуваються через makeBlur.
+// :focus-стилі, яких тригери позбуваються через blur().
 const useFocusTrap = <T extends HTMLElement = HTMLDivElement>(
   isActive: boolean
 ): RefObject<T> => {

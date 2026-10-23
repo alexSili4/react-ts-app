@@ -1,27 +1,13 @@
 import 'modern-normalize';
 import { FC } from 'react';
 import { Global, css } from '@emotion/react';
-import { ClassNames, theme } from '@/constants';
-import { interRegular } from '@/fonts';
+import { theme } from '@/constants';
 
-const revealTransition = theme.transitionDurationAndFunc.reveal;
-
+// Базові стилі документа. Власні шрифти (@font-face) — теж сюди, по одному
+// блоку на накреслення (ARCHITECTURE.md → «Шрифти»).
 const GlobalStyles: FC = () => (
   <Global
     styles={css`
-      /*
-        Без local(): за імʼям родини браузер підхопив би однойменний шрифт,
-        встановлений у системі, — іншої версії чи з іншим набором гліфів.
-        Кожне накреслення — окремий @font-face з font-weight; курсив — лише
-        справжнім файлом (font-style: italic), без синтезу з Regular.
-      */
-      @font-face {
-        font-family: ${theme.fontFamily.main};
-        src: url(${interRegular}) format('woff2');
-        font-weight: 400;
-        font-display: swap;
-      }
-
       /*
         Місце під смугу прокрутки зарезервоване завжди: коли модалка блокує
         сторінку (overflow: hidden), смуга зникає, але вʼюпорт не
@@ -34,24 +20,12 @@ const GlobalStyles: FC = () => (
       }
 
       body {
-        font-family:
-          ${theme.fontFamily.main},
-          -apple-system,
-          BlinkMacSystemFont,
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          sans-serif;
+        font-family: ${theme.fontFamily.main};
         color: ${theme.colors.text};
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         overflow-y: auto;
         overflow-x: hidden;
-      }
-
-      code {
-        font-family:
-          source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
       }
 
       h1,
@@ -93,9 +67,8 @@ const GlobalStyles: FC = () => (
       /*
         Для тих, кому рух завдає дискомфорту (вестибулярні розлади, мігрень),
         анімації не вимикаємо повністю, а стискаємо до майже миттєвих: так
-        зникає рух, але лишаються кінцеві стани, на які спирається розкладка —
-        інакше елементи, що з'являються через animate, залишились би
-        невидимими. Для framer-motion те саме робить reducedMotion у main.tsx.
+        зникає рух, але лишаються кінцеві стани, на які спирається розкладка.
+        Для framer-motion те саме робить reducedMotion у main.tsx.
       */
       @media (prefers-reduced-motion: reduce) {
         *,
@@ -108,43 +81,10 @@ const GlobalStyles: FC = () => (
         }
       }
 
-      /*
-        Проявлення при вході у вʼюпорт без framer-motion: атрибут data-reveal
-        на елементі, клас ставить useReveal, затримку окремого елемента задає
-        data-reveal-delay (мс).
-      */
-      [data-reveal] {
-        opacity: 0;
-        filter: blur(12px);
-        transform: translateY(24px);
-        transition:
-          opacity ${revealTransition},
-          filter ${revealTransition},
-          transform ${revealTransition};
-        will-change: opacity, filter, transform;
-      }
-
-      [data-reveal].${ClassNames.revealed} {
-        opacity: 1;
-        filter: blur(0);
-        transform: translateY(0);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        [data-reveal] {
-          opacity: 1;
-          filter: none;
-          transform: none;
-          transition: none;
-        }
-      }
-
       #root {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         min-height: 100vh;
-        background-color: ${theme.colors.background};
       }
     `}
   />

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { Link, NavLink } from 'react-router';
-import { caption } from '@/styles/typography';
+import { Link } from 'react-router';
 
 export const StyledHeader = styled.header`
   position: sticky;
@@ -27,21 +26,5 @@ export const LogoLink = styled(Link)`
 
   &:is(:hover, :focus-visible) {
     color: ${({ theme }) => theme.colors.accent};
-  }
-`;
-
-export const NavList = styled.ul`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing(6)}px;
-`;
-
-export const StyledNavLink = styled(NavLink)`
-  ${caption}
-  color: ${({ theme }) => theme.colors.textSecondary};
-  transition: color ${({ theme }) => theme.transitionDurationAndFunc.all};
-
-  &:is(:hover, :focus-visible),
-  &.active {
-    color: ${({ theme }) => theme.colors.text};
   }
 `;

@@ -1,12 +1,5 @@
-export { default as useMediaQuery } from './useMediaQuery';
-export { default as useIsDesk } from './useIsDesk';
-export { default as useModalWin } from './useModalWin';
-export { useModalClose } from './useModalClose';
+export { default as useScrollToTop } from './useScrollToTop';
 export { default as useBodyScrollLock } from './useBodyScrollLock';
 export { default as useFocusTrap } from './useFocusTrap';
-export { default as useScrollToTop } from './useScrollToTop';
-export { default as useLanguage } from './useLanguage';
-export { default as useDynamicParam } from './useDynamicParam';
-export { default as useHideHeader } from './useHideHeader';
-export { default as useLoaderFinished } from './useLoaderFinished';
-export { default as useReveal } from './useReveal';
+export { default as useModalWin } from './useModalWin';
+export { useModalClose } from './useModalClose';

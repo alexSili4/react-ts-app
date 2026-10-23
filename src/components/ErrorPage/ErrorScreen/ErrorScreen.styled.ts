@@ -9,7 +9,8 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(4)}px;
-  min-height: 100vh;
+  padding-top: ${({ theme }) => theme.spacing(30)}px;
+  padding-bottom: ${({ theme }) => theme.spacing(30)}px;
   text-align: center;
 `;
 

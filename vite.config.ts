@@ -40,17 +40,10 @@ const getVendorChunk = (id: string): string | undefined => {
     return 'framer-motion';
   }
 
-  if (pkg === 'react-i18next' || pkg === 'i18next' || pkg.startsWith('i18next-')) {
-    return 'i18n';
-  }
-
   return undefined;
 };
 
 export default defineConfig({
-  define: {
-    __DEV__: process.env.NODE_ENV !== 'production',
-  },
   plugins: [
     // Аліаси імпортів — з paths у tsconfig.json, єдине місце, де вони
     // оголошені. Окремого resolve.alias тут немає й не треба.

@@ -1,9 +1,9 @@
 import { FC, lazy, useRef } from 'react';
-import { ClassNames, PagePaths } from '@/constants';
+import { PagePaths } from '@/constants';
 import { Route, Routes } from 'react-router';
 import SharedLayout from '@CommonComponents/SharedLayout';
 import { LenisRef, ReactLenis } from 'lenis/react';
-import { useReveal, useScrollToTop } from '@/hooks';
+import { useScrollToTop } from '@/hooks';
 
 // Кожна сторінка — окремий лінивий чанк. Нова сторінка: файл у src/pages,
 // шлях у PagePaths, метадані в pagesMeta і маршрут нижче.
@@ -12,23 +12,21 @@ const MainPage = lazy(() => import('@/pages/MainPage'));
 
 const App: FC = () => {
   useScrollToTop();
-  useReveal();
 
   const lenisRef = useRef<LenisRef>(null);
 
   return (
+    // Блок із власною прокруткою (список у модалці, горизонтальна стрічка)
+    // Lenis не перехоплює, якщо на ньому атрибут data-lenis-prevent.
     <ReactLenis
       ref={lenisRef}
       root
       options={{
-        // Блоки з власною прокруткою (список у модалці, горизонтальна стрічка)
-        // позначаються класом noneLenisScroll — їх Lenis не перехоплює.
-        prevent: (node) => node.classList.contains(ClassNames.noneLenisScroll),
-        // Коли скрол зупинено або заблоковано (модалка, доскрол), Lenis
-        // викликає preventDefault на touch-подіях. Під час вже запущеного
-        // нативного скролу вони не скасовуються, і Chrome сипле в консоль
-        // [Intervention]. Такі події скасувати все одно неможливо, тож Lenis
-        // їх просто пропускає.
+        // Коли скрол зупинено або заблоковано (модалка), Lenis викликає
+        // preventDefault на touch-подіях. Під час уже запущеного нативного
+        // скролу вони не скасовуються, і Chrome сипле в консоль
+        // [Intervention]. Такі події скасувати все одно неможливо, тож Lenis їх
+        // просто пропускає.
         virtualScroll: ({ event }) => {
           const lenis = lenisRef.current?.lenis;
           const isBlocked = !!lenis && (lenis.isStopped || lenis.isLocked);
@@ -41,15 +39,13 @@ const App: FC = () => {
         },
       }}
     >
-      <div className='main-wrapper'>
-        <Routes>
-          <Route path={PagePaths.root} element={<SharedLayout />}>
-            <Route index element={<MainPage />} />
-            <Route path={PagePaths.notFound} element={<NotFoundPage />} />
-            <Route path='*' element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </div>
+      <Routes>
+        <Route path={PagePaths.root} element={<SharedLayout />}>
+          <Route index element={<MainPage />} />
+          <Route path={PagePaths.notFound} element={<NotFoundPage />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Route>
+      </Routes>
     </ReactLenis>
   );
 };

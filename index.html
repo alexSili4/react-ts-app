@@ -36,92 +36,26 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <!--
-      Прелоадер живе поза React: показується одразу, ще до завантаження JS.
-      Контракт із застосунком:
-      - window.updateLoader(100) викликає PageLoaderSignal, щойно перша
-        сторінка відрендерилась;
-      - поки прелоадер на екрані, на body висить клас loading;
-      - коли він зник — у window летить подія loaderFinished, на неї чекають
-        стартові анімації (useLoaderFinished, useReveal).
-      Вигляд прелоадера — під дизайн проєкту, контракт лишати.
+      До завантаження JS:
+      - фон — той самий, що theme.colors.background, інакше перший кадр білий;
+      - знімок пререндера ([data-prerender], scripts/prerender.mjs) — для
+        роботів: людям він без стилів, тож прихований, а createRoot при
+        старті замінює його справжньою сторінкою.
     -->
     <style>
-      body.loading {
-        overflow: hidden;
-      }
-
-      .preloader {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      html {
         background-color: #0a0a0a;
-        transition:
-          opacity 0.5s ease,
-          visibility 0.5s ease;
       }
 
-      .preloader.is-hidden {
-        opacity: 0;
+      [data-prerender] {
         visibility: hidden;
-      }
-
-      .preloader__spinner {
-        width: 48px;
-        height: 48px;
-        border: 2px solid rgba(255, 255, 255, 0.15);
-        border-top-color: #ffffff;
-        border-radius: 50%;
-        animation: preloader-spin 0.9s linear infinite;
-      }
-
-      @keyframes preloader-spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .preloader__spinner {
-          animation: none;
-        }
       }
     </style>
   </head>
-  <body class="loading">
-    <div class="preloader" id="preloader" role="status" aria-label="Завантаження">
-      <div class="preloader__spinner"></div>
-    </div>
-
+  <body>
     <div id="root"></div>
     <!-- Сюди порталом рендеряться модалки (ModalWin, useModalWin) -->
     <div id="modal-root"></div>
-
-    <script>
-      (function () {
-        var preloader = document.getElementById('preloader');
-        var isDone = false;
-
-        window.updateLoader = function (percent) {
-          if (isDone || percent < 100) return;
-          isDone = true;
-
-          preloader.classList.add('is-hidden');
-          document.body.classList.remove('loading');
-          window.dispatchEvent(new Event('loaderFinished'));
-        };
-
-        // Страховка: якщо React з якоїсь причини не повідомив про готовність,
-        // прелоадер не має висіти вічно.
-        window.addEventListener('load', function () {
-          setTimeout(function () {
-            window.updateLoader(100);
-          }, 5000);
-        });
-      })();
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

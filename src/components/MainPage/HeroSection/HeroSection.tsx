@@ -1,35 +1,19 @@
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 import Section from '@CommonComponents/Section';
 import PageContainer from '@CommonComponents/PageContainer';
-import { useLoaderFinished } from '@/hooks';
-import { getSlideUpVariants } from '@/constants/motion';
+import { IProps } from './HeroSection.types';
 import { Content, Subtitle, Title } from './HeroSection.styled';
 
-// Варіанти framer-motion — на рівні модуля: у тілі компонента вони
-// перестворювались би щорендер.
-const titleVariants = getSlideUpVariants(0.8, 40);
-
-// Приклад секції: заголовок зʼявляється через framer-motion після прелоадера,
-// підзаголовок — через [data-reveal] (CSS-перехід, без JS-анімації).
-const HeroSection: FC = () => {
-  const { t } = useTranslation();
-  const isLoaderFinished = useLoaderFinished();
-
+// Зразок секції: тека з чотирьох файлів (.tsx, .styled.ts, .types.ts,
+// index.ts), розмітка тут, стилі — у styled, пропси — у types. Замінити
+// першою секцією з макета.
+const HeroSection: FC<IProps> = ({ title, subtitle }) => {
   return (
     <Section>
       <PageContainer>
         <Content>
-          <Title
-            variants={titleVariants}
-            initial='hidden'
-            animate={isLoaderFinished ? 'visible' : 'hidden'}
-          >
-            {t('hero.title')}
-          </Title>
-          <Subtitle data-reveal data-reveal-delay='200'>
-            {t('hero.subtitle')}
-          </Subtitle>
+          <Title>{title}</Title>
+          <Subtitle>{subtitle}</Subtitle>
         </Content>
       </PageContainer>
     </Section>

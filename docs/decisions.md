@@ -62,52 +62,56 @@
 
 ## 2. Що змінено відносно `newsun2/starter`
 
+Принцип (рішення власника, 23.10.2026, див. 3.9): темплейт — **каркас, що запускається, і по
+одному зразку кожного патерну**. Решта структури описана в [ARCHITECTURE.md](../ARCHITECTURE.md) і
+створюється з першою потребою; бібліотеки ставляться тоді ж.
+
 **Архітектура**
 
 - **Самостійний SPA замість вбудованого в Laravel.** Проєкти агенції живуть по-різному: у Laravel
   (`newsun2`), у Yii (`atbmarket`, `zh2`), окремо на Vercel (`SUN`). Тому за замовчуванням —
-  `index.html` з метатегами й прелоадером, збірка в `dist/`, `base: '/'`. Вбудовування в бекенд —
+  `index.html` з метатегами, збірка в `dist/`, `base: '/'`. Вбудовування в бекенд —
   [backend-integration.md](backend-integration.md).
 - З `vite.config.ts` прибрано Laravel-специфічне: `reactAppViewHtml`, `pageMetaJson`,
   `pruneStaleBuildFiles` + `BUILD_ID`, імена без хеша (`js/index.js`, `css/index.css`),
   `PRELOADED_FONTS`, розкладку ассетів по теках. Лишилось загальне: SVGR з `aria-hidden`,
-  вендорні чанки (emotion разом із React, `cjs-helpers` окремо), аліаси, `__DEV__`.
-- Прелоадер переїхав із `react_app.php` в `index.html` зі збереженням контракту
-  (`window.updateLoader`, клас `loading`, подія `loaderFinished`).
+  вендорні чанки (emotion разом із React, `cjs-helpers` окремо).
 - Сторінки для роботів і соцмереж — замість `page-meta.json` + `react_app.php`: збірка пише
-  `dist/<шлях>.html` з метатегами кожної сторінки (`scripts/gen-pages.mjs`), пререндер
-  (`scripts/prerender.mjs`, перенесено з newsun2) кладе знімок у той самий HTML, sitemap — з того
-  самого переліку сторінок (`src/utils/getPageMetaMap.ts`). Див. 3.7.
+  `dist/<шлях>.html` з метатегами кожної сторінки, пререндер (перенесено з newsun2) кладе знімок
+  у той самий HTML, sitemap — з того самого переліку сторінок. Див. 3.7.
+- Прелоадера немає (3.9): знімок пререндера ховає inline-стиль `index.html`.
 
-**Тека `src`**
+**Тека `src` — що перенесено**
 
-- Перенесено загальне: `General/`, у темплейті — `Common/` (3.8): layout, мета, модалки, лоадер,
-  межа помилок, контейнери, sr-only заголовки, хуки модалок, скролу, медіазапитів, мови, прелоадера, `useReveal`, утиліти,
-  i18n зі скриптом перевірки, `http.service.ts`, стилі-фрагменти.
-- Не перенесено (специфіка Sun Agency): сторінки й компоненти About/Clients/Contacts/Projects/
-  Services, дані кейсів, частинки, 404 «чорна діра», пігулки зі світінням, Lottie, слайдери, відео.
-- `ErrorPage/ErrorScreen` — простий спільний екран для 404 і `ChunkErrorBoundary` з тим самим
-  API, що в `BlackHoleScreen`.
-- `Header`, `Footer` — мінімальні заготовки (лого, навігація з `navLinks`, копірайт, соцмережі).
-- `theme.ts` — нейтральна заготовка з меншим набором токенів. Брейкпоінти 768 / 1024 / 1440 замість
-  дизайнерських SUN (700 / 1024 / 1025 / 1281 / 1440) — на старті проєкту замінюються макетом.
-- `navLinks` тримає ключі перекладу (`titleKey`), а не літерали — тексти темплейту одразу в i18n.
-- `HttpService` бере адресу бекенду з `VITE_API_URL` (порожньо — той самий домен, як було).
+- `Common/` (у newsun2 — `General/`, 3.8): `SharedLayout`, `GlobalStyles`, `PageContainer`,
+  `PageMain`, `Section`, `PageMeta`, `Loader`, `ChunkErrorBoundary` + `PageReadySignal`,
+  `ModalWin` + `AnimatedModalWin`; заготовки `Header` (лого) і `Footer` (копірайт).
+- Хуки модалок і скролу: `useModalWin`, `useModalClose`, `useBodyScrollLock`, `useFocusTrap`,
+  `useScrollToTop`; утиліти до них.
+- `ErrorPage/`: `NotFound` і `ErrorScreen` (простий екран з тим самим API, що `BlackHoleScreen`).
+- `constants/`: `theme` (нейтральна заготовка, брейкпоінти 768 / 1024 / 1440 замість
+  дизайнерських SUN), `pagePaths`, `pagesMeta`, `index`.
+- `styles/`: `typography`, `containerPadding`.
+- Зразок секції: `MainPage/HeroSection` (усі чотири файли компонента).
+
+**Що лише описано в ARCHITECTURE.md** (з посиланнями на файли newsun2 і на адаптовані версії в
+історії темплейту, `git show 52b324d:<шлях>`): i18n, HTTP-шар, форми, шрифти, картинки, відео,
+слайдери, Lottie, біжучий рядок, прелоадер, `useReveal`, `useMediaQuery`, `srOnly`, `gridSpan`,
+`cappedVw`, константи навігації, контактів, motion-варіантів.
 
 **Залежності**
 
 - `react`, `react-dom` — `^18.3.1` (див. розділ 1), `@types/react` — `^18.3.3`.
 - Погоджено й виконано 23.10.2026 (розділ 3): `vite` 5 → 6.4 (3.1), `react-router-dom` 6 →
-  `react-router` 7.18 (3.2), ESLint 8 → 9 з flat config (3.3), `vite-tsconfig-paths` (3.4),
-  без теки `components/Animated/` (3.5).
-- Прибрано опційні: `swiper`, `lottie-react`, `react-hook-form`, `react-fast-marquee`.
-- `npm audit fix` без мажорних оновлень: axios 1.19.0 → 1.20.0, react-router 6.30.4 → 6.30.6,
-  follow-redirects, brace-expansion, js-yaml, source-map-js — закрито 5 знахідок аудиту.
+  `react-router` 7.18 (3.2), ESLint 8 → 9 з flat config (3.3), `vite-tsconfig-paths` (3.4).
+- У `package.json` — лише те, що використовує каркас (3.9). `axios`, `react-hook-form`, i18next,
+  `react-icons`, `swiper`, `lottie-react`, `react-fast-marquee` — з першою потребою, перелік і
+  версії — ARCHITECTURE.md, розділ 1.
 
 **Конфіги**
 
 - `.prettierrc.json`: `jsxBracketSameLine` → `bracketSameLine` (стару назву Prettier 3 не знає).
-- Додано: `.editorconfig` (2 пробіли, LF), `.nvmrc` (22), `.env.example`, скрипт `typecheck`,
+- Додано: `.editorconfig` (2 пробіли, LF), `.nvmrc` (22), скрипт `typecheck`, `ARCHITECTURE.md`,
   `AGENTS.md` + `CLAUDE.md`, `.claude/launch.json`.
 
 ---
@@ -222,8 +226,8 @@ GPTBot і ClaudeBot JavaScript не виконують.
    Pages редиректити на адресу зі слешем, а canonical у нас без нього.
 2. **Пререндер** (`scripts/prerender.mjs`, перенесено з newsun2 з його налагодженою логікою
    очікування мережі й знімка): headless Chrome кладе текст `#root` кожної сторінки (крім
-   `noIndex`) у її HTML. Людина знімка не бачить — він під прелоадером, `createRoot` його
-   замінює. Без Chrome збірка падає; свідомо без пререндера — `SKIP_PRERENDER=1`.
+   `noIndex`) у її HTML. Людина знімка не бачить — його ховає inline-стиль `index.html` (3.9), а
+   `createRoot` його замінює. Без Chrome збірка падає; свідомо без пререндера — `SKIP_PRERENDER=1`.
 
 Перелік сторінок — `src/utils/getPageMetaMap.ts` (статичні з `pagesMeta` + динамічні, які
 дописує проєкт); з нього ж будується `sitemap.xml`. `import-ts.mjs` навчився підміняти імпорти
@@ -254,3 +258,26 @@ description (з екрануванням `"` і `&`) і знімок з `h1`; `/
 Компоненти з `newsun2/starter/src/components/General/` класти в `Common/`, імпорт
 `@GeneralComponents` → `@CommonComponents`, `GeneralContainer` → `PageContainer`,
 `GeneralMain` → `PageMain`.
+
+### 3.9. Мінімальний каркас замість перенесеного набору — ✅ виконано 23.10.2026
+
+**Чому.** Перша версія темплейту перенесла зі starter забагато: півтора десятка спільних
+компонентів, дюжину хуків, константи навігації, анімацій, регулярних виразів, i18n, HTTP-шар.
+Більшість із цього потрібна не кожному проєкту, а темплейт має задавати архітектуру, а не готовий
+набір. Решта — описана, а не перенесена.
+
+**Що вирішено (власник, 23.10.2026).** Кодом лишаються: межа помилок чанків, Lenis, модалки,
+SEO-конвеєр (метатеги, пререндер, sitemap), зразок секції, заготовки Header і Footer. Лише в
+ARCHITECTURE.md: прелоадер, i18n, HTTP, форми, шрифти й решта модулів. Залежності — з першою
+потребою. У `constants/` — `theme` і `index` (+ `pagePaths`, `pagesMeta` для SEO-конвеєра).
+
+**Наслідки.**
+
+- Без прелоадера знімок пререндера ховає inline-стиль `[data-prerender] { visibility: hidden }` в
+  `index.html` (там само — колір фону до завантаження JS, щоб перший кадр не був білим).
+  Роботи, що не виконують JS, CSS теж не застосовують і читають текст.
+- Без i18n тексти — у складі сторінки (`<Name>Page/Main` передає їх секціям пропсами).
+- Без власних шрифтів — системні (`theme.fontFamily.main`).
+- 404 тепер у загальному layout (з хедером і футером); `useHideHeader` прибрано.
+- Lenis без власного класу-винятку: блок із власною прокруткою позначається штатним
+  `data-lenis-prevent`.

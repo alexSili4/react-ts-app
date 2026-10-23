@@ -8,7 +8,8 @@ declare module '@emotion/react' {
 // токенами з макета. Новий токен — спершу в ITheme, потім значення.
 interface ITheme {
   colors: {
-    // Фон сторінки й полотна під смугою прокрутки.
+    // Фон сторінки й полотна під смугою прокрутки. Той самий колір — в
+    // inline-стилі index.html і в theme-color.
     background: string;
     // Фон карток і панелей поверх background.
     surface: string;
@@ -55,9 +56,6 @@ interface ITheme {
     m: number;
     l: number;
   };
-  iconSizes: {
-    menuBtn: number;
-  };
   zIndex: {
     header: number;
     loader: number;
@@ -68,8 +66,6 @@ interface ITheme {
     all: string;
     // Швидкі супутні зміни: натиск, дрібні стани.
     fast: string;
-    // Проявлення при вході у вʼюпорт ([data-reveal], useReveal).
-    reveal: string;
   };
   spacing: (value?: number) => number;
 }
@@ -88,8 +84,10 @@ const theme: ITheme = {
     black: '#000000',
     backdrop: 'rgba(0, 0, 0, 0.6)',
   },
+  // Системні шрифти, доки в проєкті немає власних. Власний шрифт — файл у
+  // src/fonts/, @font-face у GlobalStyles, імʼя родини — тут (ARCHITECTURE.md).
   fontFamily: {
-    main: 'Inter',
+    main: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
   breakpoints: {
     tablet: 768,
@@ -119,9 +117,6 @@ const theme: ITheme = {
     m: 16,
     l: 32,
   },
-  iconSizes: {
-    menuBtn: 24,
-  },
   zIndex: {
     header: 100,
     loader: 200,
@@ -130,7 +125,6 @@ const theme: ITheme = {
   transitionDurationAndFunc: {
     all: `300ms ${easing}`,
     fast: `150ms ${easing}`,
-    reveal: `1000ms ${easing}`,
   },
   spacing: (value = 1) => value * 4,
 };
