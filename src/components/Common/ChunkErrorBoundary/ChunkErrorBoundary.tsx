@@ -5,7 +5,7 @@ import {
   clearChunkReloadAttempt,
   getHasChunkReloadAttempt,
   markChunkReloadAttempt,
-} from '@/utils/chunkReload';
+} from '@/utils';
 
 // Формулювання помилки завантаження чанка в браузерах різне. «Unable to
 // preload CSS» кидає сам Vite, коли зник CSS лінивого чанка.

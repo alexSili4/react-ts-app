@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router';
-import { bodyRegular16, caption, h1 } from '@/styles/typography';
 
 export const Content = styled.div`
   display: flex;
@@ -13,16 +12,19 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h1`
-  ${h1}
+  font-size: ${({ theme }) => theme.fontSize.h1};
+  line-height: ${({ theme }) => theme.lineHeight.heading};
 `;
 
 export const Message = styled.p`
-  ${bodyRegular16}
+  font-size: ${({ theme }) => theme.fontSize.body};
+  line-height: ${({ theme }) => theme.lineHeight.body};
   color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
 export const HomeLink = styled(Link)`
-  ${caption}
+  font-size: ${({ theme }) => theme.fontSize.caption};
+  line-height: ${({ theme }) => theme.lineHeight.body};
   margin-top: ${({ theme }) => theme.spacing(4)}px;
   padding: ${({ theme }) => theme.spacing(3)}px ${({ theme }) => theme.spacing(6)}px;
   border: 1px solid ${({ theme }) => theme.colors.text};

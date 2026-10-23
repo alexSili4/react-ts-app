@@ -26,6 +26,18 @@ interface ITheme {
   fontFamily: {
     main: string;
   };
+  // Типографічна шкала з макета: імена — як у Figma, щоб дизайнер і код
+  // говорили однією мовою. Компонент бере розмір і висоту рядка звідси, а не
+  // пише px від себе.
+  fontSize: {
+    h1: string;
+    body: string;
+    caption: string;
+  };
+  lineHeight: {
+    heading: number;
+    body: number;
+  };
   // Mobile-first: значення — min-width. Імена й значення — з макета.
   breakpoints: {
     tablet: number;
@@ -88,6 +100,18 @@ const theme: ITheme = {
   // src/fonts/, @font-face у GlobalStyles, імʼя родини — тут (ARCHITECTURE.md).
   fontFamily: {
     main: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  },
+  // clamp() тягне кегль лінійно від 375 px вікна (мінімум) до 1440 (максимум):
+  // для пари (min, max) — clamp(min, a + b·vw, max), де
+  // b = (max − min) / (1440 − 375) · 100, a = min − b · 3.75.
+  fontSize: {
+    h1: 'clamp(32px, 22.14px + 2.63vw, 60px)',
+    body: '16px',
+    caption: '14px',
+  },
+  lineHeight: {
+    heading: 1.2,
+    body: 1.5,
   },
   breakpoints: {
     tablet: 768,

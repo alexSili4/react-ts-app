@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const REACT_PACKAGES = new Set(['react', 'react-dom', 'scheduler', 'react-router']);
@@ -45,10 +44,6 @@ export default defineConfig({
     // оголошені. Окремого resolve.alias тут немає й не треба.
     tsconfigPaths(),
     react(),
-    // Усі SVG через ?react — декор або іконки всередині вже названих посилань
-    // і кнопок. Без aria-hidden Chrome віддає кожен окремим безіменним
-    // «зображенням». Змістовній іконці — role='img' і aria-label точково.
-    svgr({ svgrOptions: { svgProps: { 'aria-hidden': 'true' } } }),
   ],
   build: {
     // Шрифти й картинки завжди окремими файлами з хешем, а не base64 у

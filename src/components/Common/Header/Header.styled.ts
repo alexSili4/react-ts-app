@@ -20,7 +20,7 @@ export const Inner = styled.div`
 `;
 
 export const LogoLink = styled(Link)`
-  display: flex;
+  font-size: ${({ theme }) => theme.fontSize.body};
   color: ${({ theme }) => theme.colors.text};
   transition: color ${({ theme }) => theme.transitionDurationAndFunc.all};
 

@@ -22,7 +22,7 @@
 | Плавний скрол   | `lenis`                                                 | 1.3    |
 | Метатеги        | `react-helmet-async`                                    | 3      |
 | Скидання стилів | `modern-normalize`                                      | 2      |
-| Збірка          | `vite`, `@vitejs/plugin-react`, `vite-plugin-svgr`, `vite-tsconfig-paths` | 6.4 |
+| Збірка          | `vite`, `@vitejs/plugin-react`, `vite-tsconfig-paths`  | 6.4    |
 | Мова            | `typescript` (strict)                                   | 5.4    |
 | Лінтер          | `eslint` 9 (flat config), `typescript-eslint` 8, плагіни react, react-hooks, jsx-a11y, react-refresh | 9.39 |
 
@@ -31,6 +31,7 @@
 | Задача            | Пакет                                                                                    |
 | ----------------- | ---------------------------------------------------------------------------------------- |
 | Анімації          | `framer-motion@^11` + `@emotion/is-prop-valid@^1` (див. 8)                               |
+| SVG як компоненти | `vite-plugin-svgr@^4` (dev; див. 9)                                                      |
 | HTTP-запити       | `axios@^1`                                                                               |
 | Форми             | `react-hook-form@^7`                                                                     |
 | Локалізація       | `i18next@^25`, `react-i18next@^15`, `i18next-browser-languagedetector@^8`, `i18next-resources-to-backend@^1` |
@@ -52,7 +53,7 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 ├── scripts/              # кроки збірки: HTML сторінок, пререндер, sitemap
 └── src/
     ├── main.tsx          # провайдери й рендер
-    ├── vite-env.d.ts     # типи середовища (Vite, SVGR, змінні .env)
+    ├── vite-env.d.ts     # типи середовища (Vite, змінні .env)
     ├── components/
     │   ├── App.tsx       # Lenis + маршрути
     │   ├── Common/       # спільне для кількох сторінок
@@ -77,12 +78,11 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 | `components/<Name>Page` | є (`MainPage`, `NotFoundPage`) | компоненти однієї сторінки                                 |
 | `pages`                 | є                              | по файлу на сторінку                                       |
 | `constants`             | є                              | `theme`, `pagePaths`, `pagesMeta`, `index`                 |
-| `styles`                | є                              | `typography`                                               |
-| `hooks`                 | є                              | `useScrollToTop`, `useModal`                               |
-| `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою       |
+| `hooks`                 | є                              | `useModal`, `index.ts`                                     |
+| `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою, `index.ts` |
 | `types`                 | є                              | `hooks.types.ts`                                           |
-| `icons`                 | є (`Common/logo.svg`)          | SVG — по теках сторінок                                    |
-| `images`, `video`       | за потреби                     | растр і відео — по теках сторінок                          |
+| `styles`                | за потреби                     | спільні css-фрагменти                                      |
+| `icons`, `images`, `video` | за потреби                  | SVG, растр і відео — по теках сторінок                     |
 | `fonts`                 | за потреби                     | шрифти — по теках родин                                    |
 | `services`              | за потреби                     | HTTP-шар                                                   |
 | `i18n`                  | за потреби                     | переклади                                                  |
@@ -272,9 +272,14 @@ export default HeroSection;
 - Кастомні пропси на `styled(Component)` (`styled(Link)`) доходять до DOM — фільтрувати через
   `shouldForwardProp`.
 
-`styles/` — спільні css-фрагменти. Є `typography.ts` — шкала з макета (`h1`, `bodyRegular16`,
-…), підключається `${h1}`; ручних `font-size` у компонентах немає. Інші фрагменти (sr-only,
-ширина в колонках сітки) — сюди ж, коли знадобляться в двох місцях.
+**Типографіка** — у темі: `theme.fontSize` (шкала з макета, імена як у Figma) і
+`theme.lineHeight`. Компонент пише `font-size: ${({ theme }) => theme.fontSize.h1}`, ручних px
+немає. Новий кегль — новий ключ у шкалі.
+
+**`styles/`** (за потреби) — css-фрагменти, що повторюються в кількох компонентах:
+`styles/<name>.ts` з `` export const <name> = css`...` ``, підключення — `${srOnly}`. Кандидати:
+візуально прихований текст (1px + `clip-path`), ширина в колонках сітки, набір стилів
+кнопки. Один компонент — фрагмент лишається в його `.styled.ts`.
 
 ---
 
@@ -284,12 +289,12 @@ export default HeroSection;
 `hooks/index.ts`. Типи параметрів і результату — `types/hooks.types.ts`
 (`IUse<Name>Props`, `IUse<Name>`). Є:
 
-- `useScrollToTop` — прокрутка вгору при зміні сторінки (з урахуванням Lenis);
 - `useModal` — усе для модалки: Escape, клік по фону, блокування скролу (і Lenis), фокус
   усередині діалогу й повернення фокусу після закриття.
 
 **Утиліти** — `src/utils/<name>.ts`: функція або тісно повʼязана група функцій на файл, без
-React-компонентів. Імена — дієсловом: `get…`, `is…`, `format…`. Є:
+React-компонентів, експорт із барелю `utils/index.ts`. Імена — дієсловом: `get…`, `is…`,
+`format…`. Скрипти збірки (Node) імпортують файли напряму, не барель. Є:
 
 - `getPageMetaTags`, `getPageMetaMap` — метатеги й перелік сторінок (див. 10);
 - `chunkReload` — `lazyPage` і прапорець для `ChunkErrorBoundary`: після деплою вкладка, відкрита
@@ -322,6 +327,10 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 екранах.
 
 **Скрол.** Керує Lenis (`App.tsx`). Блок із власною прокруткою — атрибут `data-lenis-prevent`.
+Прокрутки вгору при переході між сторінками в каркасі немає: браузер лишає позицію
+попередньої сторінки. Коли знадобиться — хук `useScrollToTop` з викликом в `App.tsx`
+(`git show 0516229:src/hooks/useScrollToTop.ts`: `scrollRestoration = 'manual'`, нативний
+`scrollTo(0, 0)` і `lenis.scrollTo(0, { immediate: true, force: true })` у `useLayoutEffect`).
 Блокувати прокрутку сторінки — лише через `useModal` (лічильник + зупинка Lenis), не
 `document.body.style` напряму.
 
@@ -335,7 +344,7 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 
 | Що              | Де                          | Як                                                                  |
 | --------------- | --------------------------- | ------------------------------------------------------------------- |
-| SVG-іконки      | `src/icons/<Сторінка>/`     | `import Icon from '@/icons/AboutPage/star.svg?react'`; `aria-hidden` за замовчуванням (SVGR), змістовній — `role='img'` + `aria-label` |
+| SVG-іконки      | `src/icons/<Сторінка>/`     | `import Icon from '@/icons/AboutPage/star.svg?react'` (SVGR, див. нижче); змістовній — `role='img'` + `aria-label` |
 | Картинки        | `src/images/<Сторінка>/`    | webp/jpg/png імпортом (Vite додає хеш); контентним — змістовний `alt`, декору — `alt=''` |
 | Відео           | `src/video/<Сторінка>/`     | mp4 імпортом; постер — перший кадр, `.webp` з тим самим імʼям у `src/images/<Сторінка>/posters/` |
 | Шрифти          | `src/fonts/<родина>/`       | лише `woff2`; експорт у `fonts/index.ts`, `@font-face` у `GlobalStyles` (без `local()`, `font-display: swap`), імʼя родини — `theme.fontFamily` |
@@ -347,6 +356,12 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
   обрізанням перевірити, що всі символи текстів входять у діапазон. Курсив — лише справжнім
   файлом, без синтезу.
 - Один інлайновий SVG з `id` двічі на сторінці — id через `useId`.
+
+**SVG як компоненти** (перша іконка в проєкті): `npm i -D vite-plugin-svgr@^4`, у
+`vite.config.ts` — `svgr({ svgrOptions: { svgProps: { 'aria-hidden': 'true' } } })` після
+`react()`, у `vite-env.d.ts` — `/// <reference types="vite-plugin-svgr/client" />`. `aria-hidden`
+за замовчуванням — бо іконки здебільшого декор або всередині вже названих посилань і кнопок;
+без нього Chrome віддає кожну окремим безіменним «зображенням».
 
 ---
 
@@ -416,6 +431,7 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 | Слайдер             | `swiper`               | `src/styles/swiper.css` (`@layer swiper`), `General/SwiperNavButtons`, `hooks/useSwiperEdges.ts` |
 | Lottie              | `lottie-react`         | `General/InViewLottie`, `hooks/useLazyLottie.ts`, `hooks/useLottieData.ts`; аліас `lottie-web` → `lottie-web/build/player/lottie_svg` у `vite.config.ts` |
 | Біжучий рядок       | `react-fast-marquee`   | `MainPage/ClientsSectionMarquee`                                         |
+| Прокрутка вгору при переході | —             | див. 8, «Скрол»                                                          |
 | Медіазапити в JS    | —                      | `hooks/useMediaQuery.ts`                                                 |
 | Поява у вʼюпорті без JS-анімацій | —         | `hooks/useReveal.ts` + блок `[data-reveal]` у `GlobalStyles`             |
 | Прелоадер           | —                      | розмітка — `newsun2/resources/views/react_app.php`, сигнал готовності — `hooks/useLoaderFinished.ts` |

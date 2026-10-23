@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router';
-import getPageMetaTags from '@/utils/getPageMetaTags';
+import { getPageMetaTags } from '@/utils';
 import { IProps } from './PageMeta.types';
 
 // Метатеги сторінки: title, description, canonical і og:*. Ставить кожна

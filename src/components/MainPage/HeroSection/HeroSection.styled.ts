@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { bodyRegular16, h1 } from '@/styles/typography';
 
 export const Content = styled.div`
   display: flex;
@@ -11,11 +10,13 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h1`
-  ${h1}
+  font-size: ${({ theme }) => theme.fontSize.h1};
+  line-height: ${({ theme }) => theme.lineHeight.heading};
 `;
 
 export const Subtitle = styled.p`
-  ${bodyRegular16}
+  font-size: ${({ theme }) => theme.fontSize.body};
+  line-height: ${({ theme }) => theme.lineHeight.body};
   max-width: 560px;
   color: ${({ theme }) => theme.colors.textSecondary};
 `;

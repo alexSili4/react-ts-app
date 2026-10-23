@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { caption } from '@/styles/typography';
 
 export const StyledFooter = styled.footer`
   padding-top: ${({ theme }) => theme.spacing(10)}px;
@@ -8,6 +7,7 @@ export const StyledFooter = styled.footer`
 `;
 
 export const Copyright = styled.p`
-  ${caption}
+  font-size: ${({ theme }) => theme.fontSize.caption};
+  line-height: ${({ theme }) => theme.lineHeight.body};
   color: ${({ theme }) => theme.colors.textSecondary};
 `;

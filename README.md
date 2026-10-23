@@ -38,7 +38,7 @@ npm run dev
 3. `index.html` → title, description, og:\* (як у головної в `src/constants/pagesMeta.ts`),
    `theme-color` і колір фону в inline-стилі (= `theme.colors.background`).
 4. `src/constants/theme.ts` → кольори, брейкпоінти, сітка, радіуси, шрифти з макета.
-5. `src/styles/typography.ts` → типографічна шкала з макета.
+5. `theme.fontSize`, `theme.lineHeight` → типографічна шкала з макета.
 6. Шрифти проєкту → `src/fonts/` за ARCHITECTURE.md, розділ 9.
 7. `public/` → `favicon.svg` (+ `favicon.ico`, `apple-touch-icon.png`), `og-image.jpg` 1200×630,
    домен у `robots.txt`.
@@ -71,11 +71,9 @@ src/
 │   └── NotFoundPage/        # NotFound
 ├── pages/                   # MainPage, NotFoundPage
 ├── constants/               # theme, pagePaths, pagesMeta, index
-├── styles/                  # typography
-├── hooks/                   # useScrollToTop, useModal
+├── hooks/                   # useModal
 ├── utils/                   # метатеги сторінок, автоперезавантаження після деплою
-├── types/                   # hooks.types
-└── icons/Common/logo.svg    # ассети — по теках сторінок, як компоненти
+└── types/                   # hooks.types
 scripts/                     # gen-pages, prerender, gen-sitemap
 ```
 
