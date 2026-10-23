@@ -1,7 +1,7 @@
 import { FC, lazy, useRef } from 'react';
 import { ClassNames, PagePaths } from '@/constants';
 import { Route, Routes } from 'react-router';
-import SharedLayout from '@GeneralComponents/SharedLayout';
+import SharedLayout from '@CommonComponents/SharedLayout';
 import { LenisRef, ReactLenis } from 'lenis/react';
 import { useReveal, useScrollToTop } from '@/hooks';
 

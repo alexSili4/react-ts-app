@@ -1,9 +1,9 @@
 import { FC, Suspense, useState } from 'react';
 import { Outlet } from 'react-router';
-import Loader from '@GeneralComponents/Loader';
-import Header from '@GeneralComponents/Header';
-import PageLoaderSignal from '@GeneralComponents/PageLoaderSignal';
-import ChunkErrorBoundary from '@GeneralComponents/ChunkErrorBoundary';
+import Loader from '@CommonComponents/Loader';
+import Header from '@CommonComponents/Header';
+import PageLoaderSignal from '@CommonComponents/PageLoaderSignal';
+import ChunkErrorBoundary from '@CommonComponents/ChunkErrorBoundary';
 import { HeaderVisibilityContext } from '@/hooks/useHideHeader';
 
 // Межа охоплює і хедер, і Suspense навмисно. Усі сторінки вантажаться ліниво

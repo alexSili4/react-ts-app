@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { Links } from '@/constants';
 import { SITE_NAME } from '@/utils/pageTitle';
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import GeneralContainer from '@CommonComponents/GeneralContainer';
 import {
   Copyright,
   Inner,

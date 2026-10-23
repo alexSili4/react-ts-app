@@ -49,7 +49,7 @@ src/
 ├── main.tsx              # провайдери; рендер після i18nReady
 ├── components/
 │   ├── App.tsx           # Lenis + маршрути
-│   ├── General/          # спільне: SharedLayout, Header, Footer, PageMeta, ModalWin, ...
+│   ├── Common/           # спільне: SharedLayout, Header, Footer, PageMeta, ModalWin, ...
 │   ├── ErrorPage/        # ErrorScreen, NotFound
 │   └── <Name>Page/       # компоненти однієї сторінки (MainPage/ — приклад)
 ├── constants/            # theme, PagePaths, pagesMeta, navLinks, motion, viewport, ...
@@ -68,25 +68,27 @@ src/
 
 - Компонент — тека `Name/` з файлами `Name.tsx`, `Name.styled.ts`, `Name.types.ts` (лише якщо є
   пропси) і `index.ts` (`export { default } from './Name';`). Імпорт — через теку:
-  `import Name from '@GeneralComponents/Name'`.
+  `import Name from '@CommonComponents/Name'`.
 - `const Name: FC<IProps> = (...) => ...; export default Name;`. Пропси — `interface IProps`,
   пропси styled-компонентів — `interface IStyled<Name>Props`. Булеві пропси — `isX`, `showX`,
   обробники — `onXClick`.
 - Компонент, що не додає нічого, крім одного styled-тега, не заводити: віддати styled напряму
-  (`General/Section`, `General/GeneralMain`).
-- Спільне для кількох сторінок — у `General/`. Компонент однієї сторінки — у `<Name>Page/`, з
+  (`Common/Section`, `Common/GeneralMain`).
+- Спільне для кількох сторінок — у `Common/`. Компонент однієї сторінки — у `<Name>Page/`, з
   префіксом секції в імені (`HeroSectionTitle`), бо імена тек у різних сторінках збігаються.
 - Окремої теки для анімованих компонентів немає: компонент, що існує заради framer-motion, лежить
-  поруч з іншими компонентами своєї сторінки (або в `General/`) з префіксом `Animated` в імені
-  (`General/AnimatedModalWin`). У старих проєктах (`newsun2`) такі лежать у `components/Animated/` —
+  поруч з іншими компонентами своєї сторінки (або в `Common/`) з префіксом `Animated` в імені
+  (`Common/AnimatedModalWin`). У старих проєктах (`newsun2`) такі лежать у `components/Animated/` —
   при перенесенні класти за новим правилом.
+- Компоненти зі старих проєктів (`newsun2`): там спільна тека зветься `General/` з аліасом
+  `@GeneralComponents`, тут — `Common/` і `@CommonComponents`. При перенесенні міняти імпорти.
 - Сторінка (`src/pages/<Name>Page.tsx`) лише збирає: `PageMeta` з `pagesMeta`, `GeneralMain`,
   секції, `Footer`. Логіки там немає.
 - Класовий компонент — лише для меж помилок (`ChunkErrorBoundary`).
 
 ## Аліаси
 
-`@/` → `src/`, а також по аліасу на групу компонентів: `@GeneralComponents`,
+`@/` → `src/`, а також по аліасу на групу компонентів: `@CommonComponents`,
 `@ErrorPageComponents`, `@MainPageComponents`. Аліаси оголошені **лише** в `paths` у
 `tsconfig.json`: Vite читає їх звідти (`vite-tsconfig-paths`), скрипти — теж (esbuild). У
 `vite.config.ts` `resolve.alias` для шляхів проєкту не заводити. Нова тека сторінки → рядок

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import GeneralContainer from '@CommonComponents/GeneralContainer';
 import { IProps } from './ErrorScreen.types';
 import {
   ActionButton,

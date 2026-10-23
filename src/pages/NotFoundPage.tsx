@@ -1,8 +1,8 @@
 import NotFound from '@ErrorPageComponents/NotFound';
 import { FC } from 'react';
-import GeneralMain from '@GeneralComponents/GeneralMain';
+import GeneralMain from '@CommonComponents/GeneralMain';
 import { PagePaths } from '@/constants';
-import PageMeta from '@GeneralComponents/PageMeta';
+import PageMeta from '@CommonComponents/PageMeta';
 import { pagesMeta } from '@/constants/pagesMeta';
 import { useHideHeader } from '@/hooks';
 

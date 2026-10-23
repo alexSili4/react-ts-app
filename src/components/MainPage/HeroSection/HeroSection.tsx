@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import Section from '@GeneralComponents/Section';
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import Section from '@CommonComponents/Section';
+import GeneralContainer from '@CommonComponents/GeneralContainer';
 import { useLoaderFinished } from '@/hooks';
 import { getSlideUpVariants } from '@/constants/motion';
 import { Content, Subtitle, Title } from './HeroSection.styled';

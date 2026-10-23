@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { navLinks, PagePaths } from '@/constants';
-import GeneralContainer from '@GeneralComponents/GeneralContainer';
+import GeneralContainer from '@CommonComponents/GeneralContainer';
 import Logo from '@/icons/logo.svg?react';
 import {
   Inner,

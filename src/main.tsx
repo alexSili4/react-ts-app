@@ -7,7 +7,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { MotionConfig } from 'framer-motion';
 import { IconContext } from 'react-icons';
 import isPropValid from '@emotion/is-prop-valid';
-import GlobalStyles from '@GeneralComponents/GlobalStyles';
+import GlobalStyles from '@CommonComponents/GlobalStyles';
 import App from '@/components/App';
 import { i18nReady } from '@/i18n/i18n';
 
