@@ -25,7 +25,8 @@
 | Мова            | `typescript` (strict)                                   | 5.4    |
 | Лінтер          | `eslint` 9 (flat config), `typescript-eslint` 8, плагіни react, react-hooks, jsx-a11y, react-refresh | 9.39 |
 
-Додається **з першою потребою — саме ці пакети**, не альтернативи:
+Коли задача їх потребує — **саме ці пакети**, не альтернативи, і лише після погодження власником
+(AGENTS.md, «Погодження рішень»):
 
 | Задача            | Пакет                                                                                    |
 | ----------------- | ---------------------------------------------------------------------------------------- |
@@ -48,6 +49,8 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 ## 2. Структура
 
 ```
+├── .claude/settings.json # Claude Code питає дозволу на залежності й правки конфігів
+├── .github/workflows/    # CI: lint і build на кожен push і PR
 ├── index.html            # метатеги за замовчуванням, #root, #modal-root
 ├── public/               # файли «як є»: favicon, robots.txt, og-картинки, Lottie JSON
 ├── scripts/              # кроки збірки: HTML сторінок, пререндер, sitemap
@@ -262,7 +265,9 @@ export default HeroSection;
 
 - Лише emotion: `styled` у `Name.styled.ts`, `css` для фрагментів. Значення — **лише з теми**:
   hex/rgba, імена шрифтів, px-брейкпоінти й z-index літералами не писати. Нового значення в темі
-  немає — додати токен (спершу в `ITheme`), а не літерал.
+  немає — додати токен (спершу в `ITheme`), а не літерал. У `components/` літерали кольорів,
+  px-брейкпоінтів, z-index, шрифтів і тривалостей ловить `npm run lint` (`no-restricted-syntax` в
+  `eslint.config.js`).
 - У styled — через пропс: `${({ theme }) => theme.colors.text}`. У `css` з `@emotion/react` —
   імпортом `theme` з `@/constants` (функції-інтерполяції там theme не отримують).
 - Mobile-first: `@media (min-width: ${theme.breakpoints.tablet}px)`.
@@ -400,6 +405,9 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 ---
 
 ## 11. Модулі за потреби
+
+Модуль із цього розділу — рішення: спершу запропонувати й дочекатися погодження (AGENTS.md,
+«Погодження рішень»), потім переносити за описом нижче.
 
 Перевірені реалізації — у `newsun2/starter` (локальна копія власника,
 `D:\work\sunAgency\newsun2\starter`; у репозиторії проєкту її немає — нема доступу, спитати, а

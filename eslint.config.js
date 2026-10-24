@@ -6,6 +6,81 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
+// Правила ARCHITECTURE.md, які ловить лінтер, а не памʼять людини чи агента.
+// Виняток — окремим блоком нижче з поясненням, а не eslint-disable у файлі.
+const RESTRICTED_IMPORT_PATHS = [
+  {
+    name: 'react-router-dom',
+    message: 'Імпорти роутера — з react-router.',
+  },
+  {
+    name: 'react',
+    importNames: ['lazy'],
+    message:
+      'Маршрут — через lazyPage з @/utils: голий lazy не знімає прапорець автоперезавантаження ChunkErrorBoundary.',
+  },
+  {
+    name: 'react-dom/client',
+    importNames: ['hydrateRoot'],
+    message:
+      'Знімок пререндера — не для гідрації: код не готовий до SSR (ARCHITECTURE.md, розділ 10).',
+  },
+];
+
+const restrictImports = (paths) => [
+  'error',
+  {
+    paths,
+    patterns: [
+      {
+        regex: '^\\.\\./',
+        message:
+          'Між теками — через аліаси; відносні імпорти лише всередині теки компонента.',
+      },
+    ],
+  },
+];
+
+const BODY_STYLE = {
+  selector:
+    "MemberExpression[object.object.name='document'][object.property.name='body'][property.name='style']",
+  message: 'Скрол сторінки блокує лише useModal (стек модалок).',
+};
+
+// Ловить літерали в незмінних частинах шаблонів styled/css і в рядках;
+// значення з ${theme…} між ними сюди не потрапляють.
+const THEME_COLOR = [
+  {
+    selector: 'TemplateElement[value.raw=/#[0-9a-fA-F]{3,8}\\b|rgba?\\(|hsla?\\(/]',
+    message: 'Колір — з theme.colors (ARCHITECTURE.md, розділ 6).',
+  },
+  {
+    selector: 'Literal[value=/^(#[0-9a-fA-F]{3,8}|(rgba?|hsla?)\\(.*\\))$/]',
+    message: 'Колір — з theme.colors (ARCHITECTURE.md, розділ 6).',
+  },
+];
+
+const THEME_TOKENS = [
+  {
+    selector: 'TemplateElement[value.raw=/@media[^{]*\\d+px/]',
+    message: 'Брейкпоінт — з theme.breakpoints.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/z-index:\\s*-?\\d/]',
+    message: 'z-index — з theme.zIndex.',
+  },
+  {
+    selector: 'TemplateElement[value.raw=/font-family:\\s*[^\\s;]/]',
+    message: 'Шрифт — з theme.fontFamily.',
+  },
+];
+
+const THEME_DURATION = {
+  selector:
+    'TemplateElement[value.raw=/(transition|animation)(-duration)?:[^;]*\\d+m?s\\b/]',
+  message: 'Тривалість — з theme.transitionDurationAndFunc.',
+};
+
 export default tseslint.config(
   // Лінтимо лише TypeScript: JS у проєкті — службові скрипти й цей конфіг.
   // .claude/worktrees — повні копії репозиторію від Claude Code: їхні файли не
@@ -60,6 +135,67 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': restrictImports(RESTRICTED_IMPORT_PATHS),
+      'no-restricted-syntax': ['error', BODY_STYLE],
+    },
+  },
+  {
+    files: ['src/components/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        BODY_STYLE,
+        ...THEME_COLOR,
+        ...THEME_TOKENS,
+        THEME_DURATION,
+      ],
+    },
+  },
+  {
+    // prefers-reduced-motion стискає всі анімації до 0.01ms — це не
+    // тривалість дизайну, токена для неї немає.
+    files: ['src/components/Common/GlobalStyles/GlobalStyles.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        BODY_STYLE,
+        ...THEME_COLOR,
+        ...THEME_TOKENS,
+      ],
+    },
+  },
+  {
+    files: ['src/pages/**/*.tsx'],
+    rules: {
+      'no-restricted-imports': restrictImports([
+        ...RESTRICTED_IMPORT_PATHS,
+        {
+          name: 'react',
+          importNames: ['Suspense'],
+          message: 'Suspense з Loader уже дає SharedLayout.',
+        },
+      ]),
+    },
+  },
+  {
+    files: ['src/utils/chunkReload.ts'],
+    rules: {
+      'no-restricted-imports': restrictImports(
+        RESTRICTED_IMPORT_PATHS.filter(
+          ({ importNames }) => !importNames?.includes('lazy')
+        )
+      ),
+    },
+  },
+  {
+    files: ['src/hooks/useModal.ts'],
+    rules: {
+      'no-restricted-syntax': 'off',
     },
   }
 );

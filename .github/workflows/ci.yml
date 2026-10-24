@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      # Повна збірка з пререндером: Google Chrome на раннері вже є
+      # (/usr/bin/google-chrome), тож перевірка h1 і метатегів — та сама, що
+      # перед деплоєм.
+      - run: npm run build

@@ -56,12 +56,28 @@ npm run lint        # eslint з типізованими правилами, 0 �
 npm run typecheck   # tsc для src і для vite.config.ts
 ```
 
-`npm run lint` і `npm run build` мають проходити без помилок перед кожним комітом. Збірка без
-пререндера (немає Chrome; не для деплою): `$env:SKIP_PRERENDER=1; npm run build`.
+`npm run lint` і `npm run build` мають проходити без помилок перед кожним комітом; на GitHub їх
+повторює CI (`.github/workflows/ci.yml`) на кожен push у `main` і PR. Збірка без пререндера (немає
+Chrome; не для деплою): `$env:SKIP_PRERENDER=1; npm run build`.
+
+## AI-агенти
+
+Архітектурні рішення агент пропонує й чекає погодження — протокол в
+[AGENTS.md](AGENTS.md), «Погодження рішень». Запобіжники:
+
+- `.claude/settings.json` — Claude Code питає дозволу перед `npm install` / `npx` і правками
+  `package.json`, конфігів, `index.html`, `src/main.tsx`, `scripts/`, CI й документів із правилами.
+  Діє лише на Claude Code (не Codex чи Cursor) і не бачить запису файлів зі скриптів Node чи
+  Python.
+- `npm run lint` — архітектурні правила в `eslint.config.js`: літерали кольорів, брейкпоінтів,
+  z-index, шрифтів і тривалостей у компонентах, відносні імпорти між теками, голий `lazy`,
+  `Suspense` у сторінках, `react-router-dom`, `document.body.style` поза `useModal`.
 
 ## Що в темплейті
 
 ```
+.claude/settings.json        # запити дозволу для Claude Code
+.github/workflows/ci.yml     # lint і build на push і PR
 src/
 ├── main.tsx                 # провайдери: Helmet, Router, тема
 ├── components/

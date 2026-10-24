@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "ask": [
+      "Bash(npm install *)",
+      "Bash(npm i *)",
+      "Bash(npm add *)",
+      "Bash(npm uninstall *)",
+      "Bash(npm remove *)",
+      "Bash(npm update *)",
+      "Bash(npx *)",
+      "PowerShell(npm install *)",
+      "PowerShell(npm i *)",
+      "PowerShell(npm add *)",
+      "PowerShell(npm uninstall *)",
+      "PowerShell(npm remove *)",
+      "PowerShell(npm update *)",
+      "PowerShell(npx *)",
+      "Edit(/package.json)",
+      "Edit(/package-lock.json)",
+      "Edit(/vite.config.ts)",
+      "Edit(/eslint.config.js)",
+      "Edit(/tsconfig.json)",
+      "Edit(/tsconfig.node.json)",
+      "Edit(/index.html)",
+      "Edit(/src/main.tsx)",
+      "Edit(/scripts/**)",
+      "Edit(/.github/**)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/AGENTS.md)",
+      "Edit(/CLAUDE.md)",
+      "Edit(/ARCHITECTURE.md)",
+      "Edit(/docs/decisions.md)"
+    ]
+  }
+}
