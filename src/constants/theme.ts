@@ -65,6 +65,7 @@ interface ITheme {
   transitionDurationAndFunc: {
     all: string;
     fast: string;
+    loader: string;
   };
   spacing: (value?: number) => number;
 }
@@ -134,6 +135,7 @@ const theme: ITheme = {
   transitionDurationAndFunc: {
     all: `300ms ${easing}`,
     fast: `150ms ${easing}`,
+    loader: '1200ms ease-in-out',
   },
   spacing: (value = 1) => value * 4,
 };

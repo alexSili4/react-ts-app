@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
 
+// ≈ 65 знаків кеглем body: довші рядки важче читати.
+const SUBTITLE_MAX_WIDTH = 560;
+
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -17,6 +20,6 @@ export const Title = styled.h1`
 export const Subtitle = styled.p`
   font-size: ${({ theme }) => theme.fontSize.body};
   line-height: ${({ theme }) => theme.lineHeight.body};
-  max-width: 560px;
+  max-width: ${SUBTITLE_MAX_WIDTH}px;
   color: ${({ theme }) => theme.colors.textSecondary};
 `;

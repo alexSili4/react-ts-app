@@ -8,7 +8,9 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
   // Лінтимо лише TypeScript: JS у проєкті — службові скрипти й цей конфіг.
-  { ignores: ['dist', '**/*.{js,mjs,cjs}'] },
+  // .claude/worktrees — повні копії репозиторію від Claude Code: їхні файли не
+  // входять у tsconfig, і типізований парсер падав би на кожному.
+  { ignores: ['dist', '.claude', '**/*.{js,mjs,cjs}'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

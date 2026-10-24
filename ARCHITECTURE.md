@@ -152,7 +152,7 @@ pages  →  components  →  hooks · styles · utils · constants · types
 HeroSection/
 ├── HeroSection.tsx         # розмітка й логіка; export default
 ├── HeroSection.styled.ts   # styled-компоненти
-├── HeroSection.types.ts    # IProps — лише якщо є пропси
+├── HeroSection.types.ts    # IProps, IStyled<Name>Props — лише якщо є пропси
 └── index.ts                # export { default } from './HeroSection';
 ```
 
@@ -315,7 +315,8 @@ Context: провайдер у `Common/<Name>Provider`, хук доступу `u
 ## 8. Анімації, скрол, модалки
 
 **CSS.** Переходи й `@keyframes` — з тривалостями й easing із `theme.transitionDurationAndFunc`.
-`prefers-reduced-motion` обробляється глобально в `GlobalStyles` — не дублювати.
+`prefers-reduced-motion` обробляється глобально в `GlobalStyles` — не дублювати. Виняток —
+нескінченна анімація, яка після глобального правила застигла б у непридатному стані (`Loader`).
 
 **framer-motion** (коли знадобиться складна анімація). Разом із ним — `<MotionConfig
 isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidProp` кастомні пропси
@@ -326,22 +327,23 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 відсотках і лише по вертикалі (`constants/viewport.ts`): піксельні `margin` ламаються на вузьких
 екранах.
 
-**Скрол.** Нативний. Блокувати прокрутку сторінки — лише через `useModal` (лічильник), не
+**Скрол.** Нативний. Блокувати прокрутку сторінки — лише через `useModal` (стек модалок), не
 `document.body.style` напряму.
 
 Прокрутки вгору при переході між сторінками в каркасі немає: браузер лишає позицію
 попередньої сторінки. Коли знадобиться — хук `useScrollToTop` з викликом в `App.tsx`:
 `history.scrollRestoration = 'manual'` один раз і `window.scrollTo(0, 0)` у `useLayoutEffect` на
-зміну `pathname` (`git show 0516229:src/hooks/useScrollToTop.ts`).
+зміну `pathname` ([useScrollToTop.ts](https://github.com/alexSili4/react-ts-app/blob/0516229/src/hooks/useScrollToTop.ts)).
 
 **Плавний скрол (Lenis)** — коли його вимагає дизайн. Точки інтеграції (робоча версія —
-`git show 02c93ac:src/components/App.tsx` і `git show 02c93ac:src/hooks/useModal.ts`):
+[App.tsx](https://github.com/alexSili4/react-ts-app/blob/02c93ac/src/components/App.tsx) і [useModal.ts](https://github.com/alexSili4/react-ts-app/blob/02c93ac/src/hooks/useModal.ts)
+з Lenis; `useModal` там ще з лічильником замість стека):
 
 - `App.tsx`: усе дерево в `<ReactLenis root ref={lenisRef} options={{ virtualScroll }}>`;
   `virtualScroll` пропускає touch-події з `cancelable: false`, поки Lenis зупинений, — інакше Chrome
   сипле в консоль `[Intervention]`;
-- `useModal`: `lenis.stop()` разом із блокуванням скролу й `lenis.start()`, коли лічильник
-  повернувся до нуля (`useLenis()` з `lenis/react`);
+- `useModal`: `lenis.stop()` разом із блокуванням скролу й `lenis.start()`, коли стек модалок
+  спорожнів (`useLenis()` з `lenis/react`);
 - блок із власною прокруткою (діалог модалки, горизонтальна стрічка) — атрибут
   `data-lenis-prevent`;
 - `useScrollToTop` — ще й `lenis.scrollTo(0, { immediate: true, force: true })`: зупинений чи
@@ -395,11 +397,14 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 
 ## 11. Модулі за потреби
 
-Перевірені реалізації — у `D:\work\sunAgency\newsun2\starter`. Там спільна тека зветься
+Перевірені реалізації — у `newsun2/starter` (локальна копія власника,
+`D:\work\sunAgency\newsun2\starter`; у репозиторії проєкту її немає — нема доступу, спитати, а
+не відтворювати з памʼяті). Там спільна тека зветься
 `General/` (аліас `@GeneralComponents`), `PageContainer` — `GeneralContainer`, ассети лежать
 інакше (`images/main/`, постери — одна тека `images/posters/`): при перенесенні класти за
 правилами цього документа й міняти імпорти. Частина файлів, уже адаптованих під темплейт, — в
-історії репозиторію: `git show 52b324d:<шлях>`.
+історії репозиторію темплейту: `https://github.com/alexSili4/react-ts-app/blob/52b324d/<шлях>` (у проєкті, створеному з
+темплейту, цієї історії немає — лише за посиланням).
 
 ### Дані з API
 
@@ -407,7 +412,8 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 `src/services/app.service.ts` (`class AppService extends HttpService` з методами API). Адреса —
 `VITE_API_URL` у `.env` (+ `.env.example` і тип у `vite-env.d.ts`); у `VITE_*` — жодних
 секретів. Типи запитів і відповідей — `types/<домен>.types.ts`; помилки валідації (422)
-перетворювати на помилки полів у сервісі. Адаптований файл: `git show 52b324d:src/services/http.service.ts`.
+перетворювати на помилки полів у сервісі. Адаптований файл:
+[http.service.ts](https://github.com/alexSili4/react-ts-app/blob/52b324d/src/services/http.service.ts).
 
 ### Форми
 
@@ -432,8 +438,9 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 ```
 
 `main.tsx` рендерить після `i18nReady`; у компонентах — `t('a.b')`, ключі типізовані. Мову
-додавати в `LANGUAGES`, коли переклад готовий. Адаптовані файли — `git show 52b324d:src/i18n/i18n.ts`
-(і `languages.ts`, `i18next.d.ts`, `scripts/check-i18n.mjs`), перемикач — `newsun2`:
+додавати в `LANGUAGES`, коли переклад готовий. Адаптовані файли — [i18n.ts](https://github.com/alexSili4/react-ts-app/blob/52b324d/src/i18n/i18n.ts),
+[languages.ts](https://github.com/alexSili4/react-ts-app/blob/52b324d/src/i18n/languages.ts), [i18next.d.ts](https://github.com/alexSili4/react-ts-app/blob/52b324d/src/i18next.d.ts),
+[check-i18n.mjs](https://github.com/alexSili4/react-ts-app/blob/52b324d/scripts/check-i18n.mjs), перемикач — `newsun2`:
 `General/LangsMenu`, `hooks/useLanguage.ts`.
 
 ### Інше з `newsun2/starter`
@@ -482,7 +489,7 @@ scripts/check-i18n.mjs      # повнота перекладів — перши
 
 Коментар потрібен, коли читач коду сам не здогадається:
 
-- **чому** зроблено саме так, а не простішим способом (`useTransitions={false}`, лічильник замість
+- **чому** зроблено саме так, а не простішим способом (`useTransitions={false}`, стек замість
   прапорця в `useModal`);
 - про обмеження й пастки, які не видно з коду (модуль виконує Node під час збірки; без цього
   атрибута Helmet задвоїть теги);

@@ -68,7 +68,7 @@ src/
 │   ├── Common/              # SharedLayout, Header, Footer, PageContainer, PageMeta,
 │   │                        # GlobalStyles, Loader, ChunkErrorBoundary, ModalWin
 │   ├── MainPage/            # Main + зразок секції HeroSection
-│   └── NotFoundPage/        # NotFound
+│   └── NotFoundPage/        # Main
 ├── pages/                   # MainPage, NotFoundPage
 ├── constants/               # theme, pagePaths, pagesMeta, index
 ├── hooks/                   # useModal

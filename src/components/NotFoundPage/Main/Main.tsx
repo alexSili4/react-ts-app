@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { PagePaths } from '@/constants';
 import PageContainer from '@CommonComponents/PageContainer';
-import { Content, HomeLink, Message, Title } from './NotFound.styled';
+import { Content, HomeLink, Message, Title } from './Main.styled';
 
-const NotFound: FC = () => {
+const Main: FC = () => {
   return (
     <PageContainer>
       <Content>
@@ -15,4 +15,4 @@ const NotFound: FC = () => {
   );
 };
 
-export default NotFound;
+export default Main;

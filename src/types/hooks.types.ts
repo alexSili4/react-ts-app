@@ -7,6 +7,7 @@ export interface IUseModalProps {
 
 export interface IUseModal {
   dialogRef: RefObject<HTMLDivElement>;
-  // Лише клік по самому фону, не по діалогу.
+  // Обидва — на фон: закриває лише клік, що й почався, і закінчився на фоні.
+  onBackdropMouseDown: (e: MouseEvent<HTMLDivElement>) => void;
   onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
 }

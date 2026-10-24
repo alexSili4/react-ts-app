@@ -15,16 +15,18 @@ const getFocusable = (container: HTMLElement): HTMLElement[] =>
     (el) => el.getClientRects().length > 0
   );
 
-// Лічильник, а не прапорець: модалки накладаються, і та, що закриється
-// першою, не повинна повертати скрол під тією, що ще відкрита. Ширину смуги
+// Стек, а не прапорець: модалки накладаються. Клавіші обробляє лише верхня —
+// інакше Escape закрив би всі разом, а пастки фокусу перехоплювали б Tab одна
+// в одної. Скрол повертається, лише коли стек спорожнів. Ширину смуги
 // прокрутки не компенсуємо: місце під неї тримає scrollbar-gutter (GlobalStyles).
-let lockCount = 0;
+const openModals: object[] = [];
 let savedOverflow = '';
 
 const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
   const dialogRef = useRef<HTMLDivElement>(null);
   // Через ref, щоб інлайновий onClose не перезапускав ефект щорендер.
   const onCloseRef = useRef(onClose);
+  const isPressOnBackdropRef = useRef(false);
 
   onCloseRef.current = onClose;
 
@@ -33,17 +35,18 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
       return;
     }
 
+    const modal = {};
     const trigger =
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
 
-    lockCount += 1;
-
-    if (lockCount === 1) {
+    if (openModals.length === 0) {
       savedOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
     }
+
+    openModals.push(modal);
 
     // Фокус — на сам контейнер (tabIndex={-1}), а не на першу кнопку: інакше
     // кнопка закриття світилась би фокусом навіть при відкритті мишею.
@@ -53,6 +56,10 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
     });
 
     const onKeyDown = (e: KeyboardEvent) => {
+      if (openModals[openModals.length - 1] !== modal) {
+        return;
+      }
+
       if (e.key === 'Escape') {
         onCloseRef.current();
         return;
@@ -90,9 +97,9 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
       cancelAnimationFrame(frame);
       document.removeEventListener('keydown', onKeyDown);
 
-      lockCount -= 1;
+      openModals.splice(openModals.indexOf(modal), 1);
 
-      if (lockCount === 0) {
+      if (openModals.length === 0) {
         document.body.style.overflow = savedOverflow;
       }
 
@@ -100,13 +107,20 @@ const useModal = ({ isOpen, onClose }: IUseModalProps): IUseModal => {
     };
   }, [isOpen]);
 
+  // click приходить на спільного предка точок натискання й відпускання: без
+  // перевірки mousedown виділення тексту в діалозі, відпущене над фоном,
+  // закривало б модалку.
+  const onBackdropMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    isPressOnBackdropRef.current = e.target === e.currentTarget;
+  };
+
   const onBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
+    if (isPressOnBackdropRef.current && e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  return { dialogRef, onBackdropClick };
+  return { dialogRef, onBackdropMouseDown, onBackdropClick };
 };
 
 export default useModal;

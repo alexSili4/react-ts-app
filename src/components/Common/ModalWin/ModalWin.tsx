@@ -5,7 +5,10 @@ import { IProps } from './ModalWin.types';
 import { Backdrop, Dialog } from './ModalWin.styled';
 
 const ModalWin: FC<IProps> = ({ isOpen, onClose, ariaLabel, children }) => {
-  const { dialogRef, onBackdropClick } = useModal({ isOpen, onClose });
+  const { dialogRef, onBackdropMouseDown, onBackdropClick } = useModal({
+    isOpen,
+    onClose,
+  });
   const modalRoot = document.getElementById('modal-root');
 
   if (!isOpen || !modalRoot) {
@@ -15,7 +18,11 @@ const ModalWin: FC<IProps> = ({ isOpen, onClose, ariaLabel, children }) => {
   return createPortal(
     // Фон закривається лише мишею; з клавіатури — Escape (useModal), тому
     // role='presentation', а не кнопка.
-    <Backdrop role='presentation' onClick={onBackdropClick}>
+    <Backdrop
+      role='presentation'
+      onMouseDown={onBackdropMouseDown}
+      onClick={onBackdropClick}
+    >
       <Dialog
         ref={dialogRef}
         role='dialog'

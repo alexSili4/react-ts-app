@@ -1,7 +1,7 @@
 # Рішення і рекомендації
 
 Чому стек темплейту саме такий, що змінено відносно `newsun2/starter` і що пропонується
-змінити далі. Стан на **23.10.2026**.
+змінити далі. Стан на **24.10.2026**.
 
 ---
 
@@ -81,19 +81,19 @@
 
 **Тека `src` — що перенесено**
 
-Склад після 3.11:
+Склад після 3.14:
 
 - `Common/` (у newsun2 — `General/`, 3.8): `SharedLayout` (хедер, `<main>`, футер), заготовки
   `Header` і `Footer`, `PageContainer`, `PageMeta`, `GlobalStyles`, `Loader`, `ChunkErrorBoundary`,
   `ModalWin`.
-- `MainPage/`: `Main` + зразок секції `HeroSection`; `NotFoundPage/`: `NotFound`.
-- `hooks/`: `useScrollToTop`, `useModal`. `utils/`: `getPageMetaTags`, `getPageMetaMap`,
-  `chunkReload`. `types/`: `hooks.types`. `styles/`: `typography`.
+- `MainPage/`: `Main` + зразок секції `HeroSection`; `NotFoundPage/`: `Main`.
+- `hooks/`: `useModal`. `utils/`: `getPageMetaTags`, `getPageMetaMap`, `chunkReload`. `types/`:
+  `hooks.types`. Теки `styles/` немає (3.12).
 - `constants/`: `theme` (нейтральна заготовка, брейкпоінти 768 / 1024 / 1440 замість
   дизайнерських SUN), `pagePaths`, `pagesMeta`, `index`.
 
 **Що лише описано в ARCHITECTURE.md** (з посиланнями на файли newsun2 і на адаптовані версії в
-історії темплейту, `git show 52b324d:<шлях>`): i18n, HTTP-шар, форми, шрифти, картинки, відео,
+історії темплейту, `https://github.com/alexSili4/react-ts-app/blob/52b324d/<шлях>`): i18n, HTTP-шар, форми, шрифти, картинки, відео,
 слайдери, Lottie, біжучий рядок, прелоадер, `useReveal`, `useMediaQuery`, `srOnly`, `gridSpan`,
 `cappedVw`, константи навігації, контактів, motion-варіантів.
 
@@ -244,7 +244,7 @@ description (з екрануванням `"` і `&`) і знімок з `h1`; `/
 
 **Чому.** Для теки спільних компонентів у React-проєктах усталені назви `common` або `shared`;
 «General» — калька, якої не очікують ні розробник, ні AI-агент. З великої — бо всі теки-групи в
-`components/` з великої (`MainPage`, `ErrorPage`, `<Name>Page`), а аліас `@CommonComponents` стає в
+`components/` з великої (`MainPage`, `NotFoundPage`, `<Name>Page`), а аліас `@CommonComponents` стає в
 один ряд із `@MainPageComponents`. Сумісність із newsun2 свідомо не враховували (рішення власника).
 
 **Що зроблено.** `src/components/General/` → `src/components/Common/`, `@GeneralComponents` →
@@ -264,7 +264,7 @@ description (з екрануванням `"` і `&`) і знімок з `h1`; `/
 Більшість із цього потрібна не кожному проєкту, а темплейт має задавати архітектуру, а не готовий
 набір. Решта — описана, а не перенесена.
 
-**Що вирішено (власник, 23.10.2026).** Кодом лишаються: межа помилок чанків, Lenis, модалки,
+**Що вирішено (власник, 23.10.2026).** Кодом лишаються: межа помилок чанків, Lenis (згодом прибрано, 3.13), модалки,
 SEO-конвеєр (метатеги, пререндер, sitemap), зразок секції, заготовки Header і Footer. Лише в
 ARCHITECTURE.md: прелоадер, i18n, HTTP, форми, шрифти й решта модулів. Залежності — з першою
 потребою. У `constants/` — `theme` і `index` (+ `pagePaths`, `pagesMeta` для SEO-конвеєра).
@@ -345,3 +345,17 @@ newsun2 теки ассетів названі інакше (`images/main/`, `ic
 імені, «заготовка», історія змін, розділові). Записано в AGENTS.md і ARCHITECTURE.md (розділ 13)
 і застосовано до коду темплейту: прибрано «заготовки», переказ очевидного й історію (наприклад,
 про `react-loader-spinner` у `Loader`), довгі пояснення скорочено до «чому».
+
+### 3.14. Виправлення за аудитом — ✅ 24.10.2026
+
+- `useModal`: стек відкритих модалок замість лічильника — клавіші (Escape, Tab) обробляє лише
+  верхня; фон закриває модалку, лише якщо натискання й почалось, і закінчилось на ньому (раніше
+  закривало виділення тексту, відпущене над фоном).
+- `NotFoundPage/NotFound` → `NotFoundPage/Main`: склад сторінки — `Main`, як у `MainPage`.
+- `Loader`: колір і тривалість — з теми (`colors.textSecondary`, новий токен
+  `transitionDurationAndFunc.loader`), типи пропсів — `IStyledDotProps`; власний
+  `prefers-reduced-motion` лишився як задокументований виняток (ARCHITECTURE.md, розділ 8).
+- ESLint ігнорує `.claude/`: worktree Claude Code — повні копії репозиторію поза tsconfig, і
+  `npm run lint` падав на кожному їхньому файлі.
+- Посилання на файли з історії темплейту — адресами GitHub, а не `git show`: у проєкті з
+  `degit` чи «Use this template» історії немає.

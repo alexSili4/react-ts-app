@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# Домен — той самий, що SITE_URL у src/utils/pageTitle.ts
+# Домен — той самий, що SITE_URL у src/constants/pagesMeta.ts
 Sitemap: https://example.com/sitemap.xml
