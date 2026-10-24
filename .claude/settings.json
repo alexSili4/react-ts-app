@@ -8,14 +8,24 @@
       "Bash(npm uninstall *)",
       "Bash(npm remove *)",
       "Bash(npm update *)",
+      "Bash(npm pkg *)",
+      "Bash(npm exec *)",
       "Bash(npx *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(bun *)",
       "PowerShell(npm install *)",
       "PowerShell(npm i *)",
       "PowerShell(npm add *)",
       "PowerShell(npm uninstall *)",
       "PowerShell(npm remove *)",
       "PowerShell(npm update *)",
+      "PowerShell(npm pkg *)",
+      "PowerShell(npm exec *)",
       "PowerShell(npx *)",
+      "PowerShell(pnpm *)",
+      "PowerShell(yarn *)",
+      "PowerShell(bun *)",
       "Edit(/package.json)",
       "Edit(/package-lock.json)",
       "Edit(/vite.config.ts)",
@@ -24,13 +34,31 @@
       "Edit(/tsconfig.node.json)",
       "Edit(/index.html)",
       "Edit(/src/main.tsx)",
+      "Edit(/src/vite-env.d.ts)",
       "Edit(/scripts/**)",
       "Edit(/.github/**)",
-      "Edit(/.claude/settings.json)",
+      "Edit(/.claude/**)",
+      "Edit(/.nvmrc)",
+      "Edit(/.prettierrc.json)",
+      "Edit(/.editorconfig)",
+      "Edit(/.gitignore)",
       "Edit(/AGENTS.md)",
       "Edit(/CLAUDE.md)",
       "Edit(/ARCHITECTURE.md)",
       "Edit(/docs/decisions.md)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-shell.mjs\""
+          }
+        ]
+      }
     ]
   }
 }

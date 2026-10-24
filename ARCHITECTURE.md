@@ -49,11 +49,11 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 ## 2. Структура
 
 ```
-├── .claude/settings.json # Claude Code питає дозволу на залежності й правки конфігів
+├── .claude/              # settings.json і hooks/: Claude Code питає дозволу на залежності й правки конфігів
 ├── .github/workflows/    # CI: lint і build на кожен push і PR
 ├── index.html            # метатеги за замовчуванням, #root, #modal-root
 ├── public/               # файли «як є»: favicon, robots.txt, og-картинки, Lottie JSON
-├── scripts/              # кроки збірки: HTML сторінок, пререндер, sitemap
+├── scripts/              # перевірка структури; кроки збірки: HTML сторінок, пререндер, sitemap
 └── src/
     ├── main.tsx          # провайдери й рендер
     ├── vite-env.d.ts     # типи середовища (Vite, змінні .env)
@@ -82,13 +82,17 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 | `pages`                 | є                              | по файлу на сторінку                                       |
 | `constants`             | є                              | `theme`, `pagePaths`, `pagesMeta`, `index`                 |
 | `hooks`                 | є                              | `useModal`, `index.ts`                                     |
-| `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою, `index.ts` |
+| `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою, час збірки, `index.ts` |
 | `types`                 | є                              | `hooks.types.ts`, `pageMeta.types.ts`                      |
 | `styles`                | за потреби                     | спільні css-фрагменти                                      |
 | `icons`, `images`, `video` | за потреби                  | SVG, растр і відео — по теках сторінок                     |
 | `fonts`                 | за потреби                     | шрифти — по теках родин                                    |
 | `services`              | за потреби                     | HTTP-шар                                                   |
 | `i18n`                  | за потреби                     | переклади                                                  |
+
+Теки й імена файлів цього розділу та розділів 3–5, 7, 9, 11 перевіряє `npm run lint`
+(`scripts/check-structure.mjs`): тека чи файл поза цими правилами — помилка. Погоджена нова тека
+чи тип файла — правило тут і в скрипті одним комітом.
 
 ### Вміст сторінки — у теці сторінки
 
@@ -131,6 +135,10 @@ pages  →  components  →  hooks · styles · utils · constants · types
 - `utils/`, `constants/` (крім `theme`), `types/`, `services/` — без JSX.
 - `constants/` і `utils/`, які імпортує `getPageMetaMap`, — без `window`/`document` на рівні
   модуля: їх виконує Node під час збірки (метатеги, пререндер, sitemap).
+
+Імпорти проти цього напряму (`Common/` → сторінка, сторінка → інша сторінка, компонент →
+`@/pages`, `hooks`/`utils`/… → компоненти) ловить `npm run lint` (`no-restricted-imports` в
+`eslint.config.js`).
 
 ### Аліаси
 
@@ -265,8 +273,9 @@ export default HeroSection;
 
 - Лише emotion: `styled` у `Name.styled.ts`, `css` для фрагментів. Значення — **лише з теми**:
   hex/rgba, імена шрифтів, px-брейкпоінти й z-index літералами не писати. Нового значення в темі
-  немає — додати токен (спершу в `ITheme`), а не літерал. У `components/` літерали кольорів,
-  px-брейкпоінтів, z-index, шрифтів і тривалостей ловить `npm run lint` (`no-restricted-syntax` в
+  немає — додати токен (спершу в `ITheme`), а не літерал. У `components/` і `styles/` літерали
+  кольорів (hex, rgba, назви), px-брейкпоінтів, z-index, шрифтів, кеглів і тривалостей,
+  `max-width` у медіазапитах і `:focus` ловить `npm run lint` (`no-restricted-syntax` в
   `eslint.config.js`).
 - У styled — через пропс: `${({ theme }) => theme.colors.text}`. У `css` з `@emotion/react` —
   імпортом `theme` з `@/constants` (функції-інтерполяції там theme не отримують).

@@ -52,7 +52,7 @@ npm run dev
 npm run dev         # dev-сервер Vite, http://localhost:5173
 npm run build       # typecheck → vite build → pages → prerender → sitemap; результат у dist/
 npm run preview     # локально віддати dist/
-npm run lint        # eslint з типізованими правилами, 0 попереджень
+npm run lint        # структура тек + eslint з типізованими правилами, 0 попереджень
 npm run typecheck   # tsc для src і для vite.config.ts
 ```
 
@@ -65,18 +65,23 @@ Chrome; не для деплою): `$env:SKIP_PRERENDER=1; npm run build`.
 Архітектурні рішення агент пропонує й чекає погодження — протокол в
 [AGENTS.md](AGENTS.md), «Погодження рішень». Запобіжники:
 
-- `.claude/settings.json` — Claude Code питає дозволу перед `npm install` / `npx` і правками
-  `package.json`, конфігів, `index.html`, `src/main.tsx`, `scripts/`, CI й документів із правилами.
-  Діє лише на Claude Code (не Codex чи Cursor) і не бачить запису файлів зі скриптів Node чи
-  Python.
-- `npm run lint` — архітектурні правила в `eslint.config.js`: літерали кольорів, брейкпоінтів,
-  z-index, шрифтів і тривалостей у компонентах, відносні імпорти між теками, голий `lazy`,
-  `Suspense` у сторінках, `react-router-dom`, `document.body.style` поза `useModal`.
+- `.claude/settings.json` — Claude Code питає дозволу перед зміною залежностей (npm, pnpm, yarn,
+  bun, npx) і правками `package.json`, конфігів, `index.html`, `src/main.tsx`, `scripts/`, CI й
+  документів із правилами. Хук `.claude/hooks/guard-shell.mjs` питає те саме, коли файл змінює
+  команда shell (`sed -i`, `>`, `Set-Content`, `node -e`). Діє лише на Claude Code (не Codex чи
+  Cursor); запис зі скрипта, який сам відкриває файл, хук не бачить.
+- `npm run lint`, спершу `scripts/check-structure.mjs` — теки й імена файлів за ARCHITECTURE.md,
+  відповідність теки сторінки, файла в `pages/` і аліаса, експорт хуків і утиліт із барелів.
+- Далі `eslint.config.js`: напрям імпортів (`Common/` → сторінка, сторінка → інша сторінка,
+  компонент → `@/pages`), літерали замість токенів теми в `components/` і `styles/` (кольори з
+  назвами, кеглі, брейкпоінти, `max-width` у медіа, z-index, шрифти, тривалості), `:focus`, голий
+  `lazy`, `Suspense` у сторінках, `react-router-dom`, `document.body.style` поза `useModal`,
+  `@ts-expect-error`. Коментарі `eslint-disable` не діють: виняток — лише блоком у конфігу.
 
 ## Що в темплейті
 
 ```
-.claude/settings.json        # запити дозволу для Claude Code
+.claude/                     # settings.json і hooks/: запити дозволу для Claude Code
 .github/workflows/ci.yml     # lint і build на push і PR
 src/
 ├── main.tsx                 # провайдери: Helmet, Router, тема
@@ -91,7 +96,7 @@ src/
 ├── hooks/                   # useModal
 ├── utils/                   # метатеги сторінок, автоперезавантаження після деплою, час збірки
 └── types/                   # hooks.types, pageMeta.types
-scripts/                     # gen-pages, prerender, gen-sitemap
+scripts/                     # check-structure, gen-pages, prerender, gen-sitemap
 ```
 
 ## Сторінки для роботів і соцмереж

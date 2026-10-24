@@ -18,8 +18,5 @@ export const Dialog = styled.div`
   padding: ${({ theme }) => theme.spacing(8)}px;
   background-color: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.radius.m}px;
-
-  &:focus {
-    outline: none;
-  }
+  outline: none;
 `;
