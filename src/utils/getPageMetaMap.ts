@@ -1,5 +1,6 @@
 import PagePaths from '@/constants/pagePaths';
-import { IPageMetaData, pagesMeta } from '@/constants/pagesMeta';
+import { pagesMeta } from '@/constants/pagesMeta';
+import { IPageMetaData } from '@/types/pageMeta.types';
 
 export const NOT_FOUND_PATH: string = PagePaths.notFound;
 

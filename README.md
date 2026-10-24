@@ -9,7 +9,8 @@
 - [AGENTS.md](AGENTS.md) — правила для AI-агентів (Claude Code читає його через `CLAUDE.md`).
 - [docs/decisions.md](docs/decisions.md) — чому рішення саме такі.
 
-Node — **22** (`.nvmrc`), мінімум 20. Для збірки потрібен Google Chrome (пререндер).
+Node — **22** (`.nvmrc`, `engines`): пререндеру потрібен вбудований `WebSocket`, якого в Node 20
+немає. Для збірки потрібен Google Chrome (пререндер).
 
 ## Швидкий старт
 
@@ -73,7 +74,7 @@ src/
 ├── constants/               # theme, pagePaths, pagesMeta, index
 ├── hooks/                   # useModal
 ├── utils/                   # метатеги сторінок, автоперезавантаження після деплою
-└── types/                   # hooks.types
+└── types/                   # hooks.types, pageMeta.types
 scripts/                     # gen-pages, prerender, gen-sitemap
 ```
 

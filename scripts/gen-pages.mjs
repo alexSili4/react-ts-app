@@ -29,13 +29,20 @@ if (!shell.includes('<div id="root"></div>')) {
 }
 
 // Загальні теги з index.html: <title> і всі, що перевизначає PageMeta
-// (data-rh="true"). На їхнє місце ляже набір тегів сторінки.
+// (data-rh="true"). На їхнє місце ляже набір тегів сторінки. Коментарі —
+// геть: у них трапляються назви тегів, і заміна, що влучила в коментар,
+// загнала б усі метатеги сторінки всередину нього.
 const template = shell
+  .replace(/[ \t]*<!--[\s\S]*?-->\r?\n?/g, '')
   .replace(/<title>[\s\S]*?<\/title>/, PAGE_META_MARKER)
   .replace(/[ \t]*<(meta|link)\b[^>]*\bdata-rh="true"[^>]*>\r?\n?/g, '');
 
 if (!template.includes(PAGE_META_MARKER)) {
   throw new Error(`pages: у ${SHELL_FILE} немає <title>`);
+}
+
+if (template.includes('<title')) {
+  throw new Error(`pages: у ${SHELL_FILE} більше одного <title>`);
 }
 
 const escapeAttr = (value) =>

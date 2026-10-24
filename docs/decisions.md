@@ -33,7 +33,7 @@
    react-i18next 17, react-helmet-async 3, react-hook-form 7, lottie-react 2, lenis — усі
    приймають React 18. Жодна бібліотека зараз не змушує переходити.
 5. **Що дав би 19 нашим сайтам** — зручності, не можливості: `ref` як звичайний проп (без
-   `forwardRef`), атрибут `inert` без латки типів (`src/types/react-inert.d.ts`), `<title>` і
+   `forwardRef`), атрибут `inert` без власної латки типів, `<title>` і
    `<meta>` прямо в компонентах (міг би замінити react-helmet-async), Actions /
    `useActionState` / `useOptimistic` для форм. React Compiler працює і з 18.
 6. **Що коштував би перехід:** зміни типів (`useRef` вимагає аргумент, `RefObject<T | null>`,
@@ -72,8 +72,8 @@
   проєктах темплейту немає (3.11), тож вбудовування в Laravel, як у newsun2, не описується.
 - З `vite.config.ts` прибрано Laravel-специфічне: `reactAppViewHtml`, `pageMetaJson`,
   `pruneStaleBuildFiles` + `BUILD_ID`, імена без хеша (`js/index.js`, `css/index.css`),
-  `PRELOADED_FONTS`, розкладку ассетів по теках. Лишилось загальне: SVGR з `aria-hidden`,
-  вендорні чанки (emotion разом із React, `cjs-helpers` окремо).
+  `PRELOADED_FONTS`, розкладку ассетів по теках. Лишилось загальне: вендорні чанки
+  (emotion разом із React, `cjs-helpers` окремо). SVGR згодом теж прибрано (3.12).
 - Сторінки для роботів і соцмереж — замість `page-meta.json` + `react_app.php`: збірка пише
   `dist/<шлях>.html` з метатегами кожної сторінки, пререндер (перенесено з newsun2) кладе знімок
   у той самий HTML, sitemap — з того самого переліку сторінок. Див. 3.7.
@@ -88,7 +88,7 @@
   `ModalWin`.
 - `MainPage/`: `Main` + зразок секції `HeroSection`; `NotFoundPage/`: `Main`.
 - `hooks/`: `useModal`. `utils/`: `getPageMetaTags`, `getPageMetaMap`, `chunkReload`. `types/`:
-  `hooks.types`. Теки `styles/` немає (3.12).
+  `hooks.types`, `pageMeta.types` (3.16). Теки `styles/` немає (3.12).
 - `constants/`: `theme` (нейтральна заготовка, брейкпоінти 768 / 1024 / 1440 замість
   дизайнерських SUN), `pagePaths`, `pagesMeta`, `index`.
 
@@ -370,3 +370,13 @@ newsun2 теки ассетів названі інакше (`images/main/`, `ic
   видиму область, поки показано адресний рядок, і футер короткої сторінки ховався за край.
 - AGENTS.md, «Документація — разом із кодом»: новий модуль — оновити перелік в ARCHITECTURE.md у
   тому ж коміті, нове рішення — розділ тут.
+
+### 3.16. Метатеги в зібраному HTML, типи метаданих — ✅ 24.10.2026
+
+- `gen-pages` вирізає коментарі `index.html` перед заміною тегів. Коментар зі словом `<title>`
+  перехоплював заміну, і всі метатеги сторінки опинялись усередині коментаря: сирий HTML був без
+  title, canonical і og:\*. Тепер збірка падає, якщо `<title>` у шаблоні не рівно один.
+- `IPageMetaData` і `IPageMetaTags` → `types/pageMeta.types.ts` (правило розділу 7
+  ARCHITECTURE.md); `PageMeta` бере пропси з `IPageMetaData`, а не з копії. Виправлено хибні
+  коментарі: сторінка без `description` лишається без опису, а не успадковує загальний.
+- `engines.node >= 22`: пререндеру потрібен вбудований `WebSocket`, якого в Node 20 немає.

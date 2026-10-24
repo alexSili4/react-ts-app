@@ -80,7 +80,7 @@ UI-кіти (MUI, Chakra, Ant), бібліотеки стану (Redux, Zustand,
 | `constants`             | є                              | `theme`, `pagePaths`, `pagesMeta`, `index`                 |
 | `hooks`                 | є                              | `useModal`, `index.ts`                                     |
 | `utils`                 | є                              | метатеги сторінок, автоперезавантаження після деплою, `index.ts` |
-| `types`                 | є                              | `hooks.types.ts`                                           |
+| `types`                 | є                              | `hooks.types.ts`, `pageMeta.types.ts`                      |
 | `styles`                | за потреби                     | спільні css-фрагменти                                      |
 | `icons`, `images`, `video` | за потреби                  | SVG, растр і відео — по теках сторінок                     |
 | `fonts`                 | за потреби                     | шрифти — по теках родин                                    |
@@ -304,7 +304,8 @@ React-компонентів, експорт із барелю `utils/index.ts`.
 `/* @__PURE__ */`, інакше модуль осідає у вхідному чанку.
 
 **Типи** — `src/types/<domain>.types.ts`: доменні типи (`projects.types.ts`), типи хуків
-(`hooks.types.ts`). Типи пропсів — поруч із компонентом (`Name.types.ts`). Інтерфейси — з
+(`hooks.types.ts`). Є: `hooks.types.ts`, `pageMeta.types.ts` (метадані сторінки й пораховані
+теги). Типи пропсів — поруч із компонентом (`Name.types.ts`). Інтерфейси — з
 префіксом `I`, обʼєднання й аліаси — `type`.
 
 **Стан.** Стан сторінки — у компонентах і хуках. Спільний для кількох гілок дерева — React

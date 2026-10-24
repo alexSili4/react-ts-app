@@ -1,12 +1,3 @@
-export interface IProps {
-  // Частина заголовка до « | <SITE_NAME> ». Порожній рядок дає саму назву сайту.
-  title: string;
-  // 150-160 символів. Без неї сторінка успадкує загальний опис з index.html.
-  description?: string;
-  // Абсолютний URL. За замовчуванням — спільна картка /og-image.jpg.
-  image?: string;
-  // Для сторінок, яких не має бути в індексі. Роут-перехоплювач віддає 200 на
-  // будь-який URL, тож без цього 404 виглядає для пошуковика звичайною
-  // сторінкою — класичний soft 404.
-  noIndex?: boolean;
-}
+import { IPageMetaData } from '@/types/pageMeta.types';
+
+export interface IProps extends IPageMetaData {}
