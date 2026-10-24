@@ -89,7 +89,7 @@ src/
 ├── pages/                   # MainPage, NotFoundPage
 ├── constants/               # theme, pagePaths, pagesMeta, index
 ├── hooks/                   # useModal
-├── utils/                   # метатеги сторінок, автоперезавантаження після деплою
+├── utils/                   # метатеги сторінок, автоперезавантаження після деплою, час збірки
 └── types/                   # hooks.types, pageMeta.types
 scripts/                     # gen-pages, prerender, gen-sitemap
 ```

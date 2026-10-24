@@ -6,6 +6,9 @@ import { BrowserRouter } from 'react-router';
 import { HelmetProvider } from 'react-helmet-async';
 import GlobalStyles from '@CommonComponents/GlobalStyles';
 import App from '@/components/App';
+import { logBuildTime } from '@/utils';
+
+logBuildTime();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

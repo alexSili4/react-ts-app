@@ -8,6 +8,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # Звичайний прогін — пів хвилини; без ліміту завислий крок GitHub чекав
+    # би до 6 годин.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
 

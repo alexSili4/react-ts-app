@@ -185,7 +185,12 @@ const connect = async (wsUrl) => {
       ws.send(JSON.stringify({ id: lastId, method, params }));
     });
 
-  return { send, on: (listener) => listeners.add(listener), close: () => ws.close() };
+  return {
+    send,
+    on: (listener) => listeners.add(listener),
+    off: (listener) => listeners.delete(listener),
+    close: () => ws.close(),
+  };
 };
 
 const evaluate = async (tab, expression) => {
@@ -207,11 +212,20 @@ const evaluate = async (tab, expression) => {
 // відтворення), а запити відео сторінки, з якої йдемо, при переході
 // обриваються без loadingFailed — лічильник-число застрягав назавжди (так
 // пререндер падав у newsun2). Відео в знімок однаково не потрапляє.
+//
+// Помилка JS сторінки зупиняє збірку одразу, з текстом помилки: впала
+// сторінка h1 не покаже ніколи, і очікування без цього висіло б до таймауту.
 const renderPage = async (tab, url) => {
   const inflight = new Set();
   const media = new Set();
   let lastActivity = Date.now();
+  let pageError = null;
   const onEvent = ({ method, params }) => {
+    if (method === 'Runtime.exceptionThrown') {
+      const { exception, text } = params.exceptionDetails;
+      pageError ??= exception?.description || text;
+      return;
+    }
     if (!method.startsWith('Network.')) return;
     if (method === 'Network.requestWillBeSent' && params.type === 'Media') media.add(params.requestId);
     if (media.has(params.requestId)) return;
@@ -221,38 +235,50 @@ const renderPage = async (tab, url) => {
   };
   tab.on(onEvent);
 
-  await tab.send('Page.navigate', { url });
-  const started = Date.now();
+  try {
+    await tab.send('Page.navigate', { url });
+    const started = Date.now();
 
-  const waitIdle = async () => {
-    while (inflight.size > 0 || Date.now() - lastActivity < NETWORK_IDLE_MS) {
-      if (Date.now() - started > PAGE_TIMEOUT_MS) throw new Error(`prerender: ${url} не дочекався тиші мережі`);
+    const assertPageAlive = (timeoutMessage) => {
+      if (pageError) throw new Error(`prerender: ${url} — помилка JS на сторінці:\n${pageError}`);
+      if (Date.now() - started > PAGE_TIMEOUT_MS) throw new Error(`prerender: ${url} ${timeoutMessage}`);
+    };
+
+    const waitIdle = async () => {
+      while (inflight.size > 0 || Date.now() - lastActivity < NETWORK_IDLE_MS) {
+        assertPageAlive('не дочекався тиші мережі');
+        await sleep(100);
+      }
+    };
+
+    await waitIdle();
+
+    while (!(await evaluate(tab, "Boolean(document.querySelector('#root main h1'))"))) {
+      assertPageAlive(`за ${PAGE_TIMEOUT_MS / 1000} с не показав h1 — сторінка не відрендерилась`);
       await sleep(100);
     }
-  };
 
-  await waitIdle();
-  await evaluate(tab, `new Promise((resolve) => {
-    const check = () => document.querySelector('#root main h1') ? resolve() : setTimeout(check, 100);
-    check();
-  })`);
-  await evaluate(tab, 'document.fonts.ready.then(() => true)');
-  await evaluate(tab, `(async () => {
-    const pause = (ms) => new Promise((r) => setTimeout(r, ms));
-    let still = 0;
-    let last = -1;
-    while (still < 4) {
-      window.scrollBy(0, innerHeight * 0.8);
-      await pause(120);
-      still = scrollY === last ? still + 1 : 0;
-      last = scrollY;
-    }
-    window.scrollTo(0, 0);
-  })()`);
-  await waitIdle();
-  await sleep(500);
+    await evaluate(tab, 'document.fonts.ready.then(() => true)');
+    await evaluate(tab, `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+      let still = 0;
+      let last = -1;
+      while (still < 4) {
+        window.scrollBy(0, innerHeight * 0.8);
+        await pause(120);
+        still = scrollY === last ? still + 1 : 0;
+        last = scrollY;
+      }
+      window.scrollTo(0, 0);
+    })()`);
+    await waitIdle();
+    await sleep(500);
+    assertPageAlive('не встиг дорендеритись');
 
-  return evaluate(tab, SNAPSHOT);
+    return await evaluate(tab, SNAPSHOT);
+  } finally {
+    tab.off(onEvent);
+  }
 };
 
 const { pages } = await loadPages();
@@ -297,6 +323,8 @@ try {
 
   await tab.send('Page.enable');
   await tab.send('Network.enable');
+  // Без нього Chrome не надсилає Runtime.exceptionThrown — помилки JS сторінки.
+  await tab.send('Runtime.enable');
   await tab.send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 
   // Спершу всі знімки, потім запис: сервер віддає оболонку з dist/index.html,

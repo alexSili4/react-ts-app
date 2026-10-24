@@ -39,6 +39,11 @@ const getVendorChunk = (id: string): string | undefined => {
 };
 
 export default defineConfig({
+  // UTC в ISO: у місцевий час і формат користувача його переводить браузер
+  // (logBuildTime). Тип — у src/vite-env.d.ts.
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [
     // Аліаси імпортів — з paths у tsconfig.json, єдине місце, де вони
     // оголошені. Окремого resolve.alias тут немає й не треба.
