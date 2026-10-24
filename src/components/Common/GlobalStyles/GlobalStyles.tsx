@@ -78,10 +78,14 @@ const GlobalStyles: FC = () => (
         }
       }
 
+      /*
+        dvh, а не vh: на телефоні 100vh — висота без адресного рядка, і поки
+        рядок видно, футер короткої сторінки ховався б за край екрана.
+      */
       #root {
         display: flex;
         flex-direction: column;
-        min-height: 100vh;
+        min-height: 100dvh;
       }
     `}
   />

@@ -390,6 +390,9 @@ isValidProp={isPropValid} reducedMotion='user'>` у `main.tsx`: без `isValidP
 - Збірка: `vite build` → `gen-pages` (`dist/<шлях>.html` з метатегами сторінки + `404.html`) →
   `prerender` (headless Chrome кладе текст сторінки в обгортку `[data-prerender]`, яку
   inline-стиль `index.html` ховає від людей) → `sitemap`.
+- Перевірки збірки: `prerender` падає, якщо в знімку сторінки не рівно один `h1`; `gen-pages`
+  попереджає, поки `SITE_URL` — `example.com` або og:image сторінки веде на файл, якого немає в
+  `public/`.
 - Знімок — лише для роботів, `createRoot` його замінює. Не перетворювати на гідрацію
   (`hydrateRoot`) без окремого рішення: код не готовий до SSR.
 

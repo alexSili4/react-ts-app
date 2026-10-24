@@ -83,3 +83,24 @@ if (notFoundPage) {
 console.log(
   `pages: ${pages.length} HTML з метатегами` + (notFoundPage ? ' + 404.html' : '')
 );
+
+// Попередження, а не помилка: заглушки свідомо стоять у самому темплейті, і
+// його збірка має проходити. У проєкті з ними canonical і og:url ведуть на
+// чужий домен, а картка в соцмережах — без картинки.
+const placeholderWarnings = new Set();
+
+for (const { tags } of pages) {
+  const canonical = new URL(tags.canonical);
+  const image = new URL(tags.image);
+  const imageFile = path.posix.join('public', decodeURIComponent(image.pathname));
+
+  if (canonical.hostname === 'example.com') {
+    placeholderWarnings.add('SITE_URL у src/constants/pagesMeta.ts — досі https://example.com');
+  }
+
+  if (image.origin === canonical.origin && !fs.existsSync(imageFile)) {
+    placeholderWarnings.add(`немає ${imageFile} — og:image ${tags.image} віддасть 404`);
+  }
+}
+
+placeholderWarnings.forEach((warning) => console.warn(`pages: увага — ${warning}`));

@@ -306,8 +306,14 @@ try {
   for (const route of routes) {
     const html = await renderPage(tab, origin + route);
 
-    if (!html.includes('<h1')) {
+    const h1Count = html.match(/<h1[\s>]/g)?.length ?? 0;
+
+    if (h1Count === 0) {
       throw new Error(`prerender: у знімку ${route} немає h1 — сторінка не відрендерилась`);
+    }
+
+    if (h1Count > 1) {
+      throw new Error(`prerender: у знімку ${route} ${h1Count} h1 — має бути рівно один`);
     }
 
     snapshots.push({ route, html });

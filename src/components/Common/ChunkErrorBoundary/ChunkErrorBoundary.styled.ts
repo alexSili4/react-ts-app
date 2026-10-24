@@ -6,7 +6,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(4)}px;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: ${({ theme }) => theme.spacing(5)}px;
   text-align: center;
 `;
